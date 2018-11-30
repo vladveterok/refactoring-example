@@ -184,7 +184,6 @@ class Account
           a2 = gets.chomp
           if a2 == 'y'
             @current_account.card.delete_at(answer&.to_i.to_i - 1)
-            @current_account.card[answer&.to_i.to_i]
             new_accounts = []
             accounts.each do |ac|
               if ac.login == @current_account.login
@@ -193,10 +192,10 @@ class Account
                 new_accounts.push(ac)
               end
             end
-            File.open('accounts.yml', 'w') { |f| f.write new_accounts.to_yaml } #Storing
+            File.open(@file_path, 'w') { |f| f.write new_accounts.to_yaml } #Storing
             break
           else
-            next
+            return
           end
         else
           puts "You entered wrong number!\n"
@@ -247,7 +246,7 @@ class Account
                     new_accounts.push(ac)
                   end
                 end
-                File.open('accounts.yml', 'w') { |f| f.write new_accounts.to_yaml } #Storing
+                File.open(@file_path, 'w') { |f| f.write new_accounts.to_yaml } #Storing
                 puts "Money #{a2&.to_i.to_i} withdrawed from #{current_card[:number]}$. Money left: #{current_card[:balance]}$. Tax: #{withdraw_tax(current_card[:type], current_card[:balance], current_card[:number], a2&.to_i.to_i)}$"
                 return
               else
@@ -288,29 +287,25 @@ class Account
             if a2&.to_i.to_i > 0
               if put_tax(current_card[:type], current_card[:balance], current_card[:number], a2&.to_i.to_i) >= a2&.to_i.to_i
                 puts 'Your tax is higher than input amount'
+                return
               else
                 new_money_amount = current_card[:balance] + a2&.to_i.to_i - put_tax(current_card[:type], current_card[:balance], current_card[:number], a2&.to_i.to_i)
-                if new_money_amount > 0
-                  current_card[:balance] = new_money_amount
-                  @current_account.card[answer&.to_i.to_i - 1] = current_card
-                  new_accounts = []
-                  accounts.each do |ac|
-                    if ac.login == @current_account.login
-                      new_accounts.push(@current_account)
-                    else
-                      new_accounts.push(ac)
-                    end
+                current_card[:balance] = new_money_amount
+                @current_account.card[answer&.to_i.to_i - 1] = current_card
+                new_accounts = []
+                accounts.each do |ac|
+                  if ac.login == @current_account.login
+                    new_accounts.push(@current_account)
+                  else
+                    new_accounts.push(ac)
                   end
-                  File.open('accounts.yml', 'w') { |f| f.write new_accounts.to_yaml } #Storing
-                  puts "Money #{a2&.to_i.to_i}$ was put on #{current_card[:number]}. Balance: #{current_card[:balance]}. Tax: #{put_tax(current_card[:type], current_card[:balance], current_card[:number], a2&.to_i.to_i)}$"
-                  return
-                else
-                  puts "You don't have enough money on card for such operation"
-                  return
                 end
+                File.open(@file_path, 'w') { |f| f.write new_accounts.to_yaml } #Storing
+                puts "Money #{a2&.to_i.to_i} was put on #{current_card[:number]}. Balance: #{current_card[:balance]}. Tax: #{put_tax(current_card[:type], current_card[:balance], current_card[:number], a2&.to_i.to_i)}"
+                return
               end
             else
-              puts 'You must input correct amount of $'
+              puts 'You must input correct amount of money'
               return
             end
           end
