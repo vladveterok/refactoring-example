@@ -1,8 +1,25 @@
 class BasicCard
-
   CARD_NUMBER_LENGTH = 16
 
-  def card_number
-    @card_number ||= CARD_NUMBER_LENGTH.times.map { rand(10) }.join
+  TAX_PERCENT = {
+    withdraw: 0,
+    put: 0,
+    sender: 0
+  }
+
+  TAX_FIXED = {
+    withdraw: 0,
+    put: 0,
+    sender: 0 
+  }
+
+  private
+
+  def tax(amount:, percent:, fixed:)
+    amount * percent / 100.0 + fixed
+  end
+
+  def generate_card_number
+    Array.new(CARD_NUMBER_LENGTH) { rand(10) }.join
   end
 end
