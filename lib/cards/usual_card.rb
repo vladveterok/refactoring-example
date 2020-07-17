@@ -1,0 +1,2 @@
+class UsualCard < BasicCard
+end

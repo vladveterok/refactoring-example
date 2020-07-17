@@ -1,0 +1,2 @@
+class CapitalistCard < BasicCard
+end
