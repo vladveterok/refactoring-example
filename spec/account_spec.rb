@@ -485,9 +485,9 @@ RSpec.describe Account do
 
           expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
           file_accounts = YAML.load_file(OVERRIDABLE_FILENAME)
-          expect(file_accounts.first.card.first[:type]).to eq card_info[:type]
-          expect(file_accounts.first.card.first[:balance]).to eq card_info[:balance]
-          expect(file_accounts.first.card.first[:number].length).to be 16
+          expect(file_accounts.first.card.first.type).to eq card_info[:type]
+          expect(file_accounts.first.card.first.balance).to eq card_info[:balance]
+          expect(file_accounts.first.card.first.number.length).to be 16
         end
       end
     end

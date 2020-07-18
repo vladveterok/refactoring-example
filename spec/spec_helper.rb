@@ -5,6 +5,7 @@ SimpleCov.start do
   add_filter(%r{\/spec\/})
 end
 
+require_relative '../bootstrap'
 require_relative '../account'
 
 RSpec.configure do |config|
