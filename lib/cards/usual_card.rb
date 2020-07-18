@@ -1,5 +1,6 @@
 class UsualCard < BasicCard
-  
+  attr_reader :balance
+
   # in cents
   TAX_PERCENT = {
     withdraw: 5,

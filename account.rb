@@ -1,6 +1,8 @@
 require 'yaml'
 require 'pry'
 
+require_relative 'bootstrap'
+
 class Account
   attr_accessor :login, :name, :card, :password, :file_path
 
@@ -133,23 +135,11 @@ class Account
       ct = gets.chomp
       if ct == 'usual' || ct == 'capitalist' || ct == 'virtual'
         if ct == 'usual'
-          card = {
-            type: 'usual',
-            number: 16.times.map{rand(10)}.join,
-            balance: 50.00
-          }
+          card = UsualCard.new
         elsif ct == 'capitalist'
-          card = {
-            type: 'capitalist',
-            number: 16.times.map{rand(10)}.join,
-            balance: 100.00
-          }
+          card = CapitalistCard.new
         elsif ct == 'virtual'
-          card = {
-            type: 'virtual',
-            number: 16.times.map{rand(10)}.join,
-            balance: 150.00
-          }
+          card = VirtualCard.new
         end
         cards = @current_account.card << card
         @current_account.card = cards #important!!!

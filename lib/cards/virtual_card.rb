@@ -1,4 +1,5 @@
 class VirtualCard < BasicCard
+  attr_reader :balance
 
   # in cents
   TAX_PERCENT = {
