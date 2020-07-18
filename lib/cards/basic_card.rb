@@ -5,13 +5,13 @@ class BasicCard
     withdraw: 0,
     put: 0,
     sender: 0
-  }
+  }.freeze
 
   TAX_FIXED = {
     withdraw: 0,
     put: 0,
-    sender: 0 
-  }
+    sender: 0
+  }.freeze
 
   private
 

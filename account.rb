@@ -129,7 +129,7 @@ class Account
       puts '- Virtual card. 1$ tax on card INCOME. 1$ tax on SENDING money from this card. 12% tax on WITHDRAWING money. For creation this card - press `virtual`'
       puts '- For exit - press `exit`'
 
-      ################################ FIRST ITERATION
+      ################################ CARD CREATION
       ct = gets.chomp
       if ct == 'usual' || ct == 'capitalist' || ct == 'virtual'
         if ct == 'usual'
@@ -168,7 +168,7 @@ class Account
       end
     end
   end
-  ################################ FIRST ITERATION ENDS
+  ################################ CARD CREATION ENDS
 
   def destroy_card
     loop do
@@ -478,6 +478,7 @@ class Account
     end
   end
 
+  ################## TAXES
   def withdraw_tax(type, balance, number, amount)
     if type == 'usual'
       return amount * 0.05
@@ -510,4 +511,5 @@ class Account
     end
     0
   end
+  ################## TAXES END
 end

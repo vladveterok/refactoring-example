@@ -1,22 +1,24 @@
 class UsualCard < BasicCard
+  
+  # in cents
   TAX_PERCENT = {
     withdraw: 5,
     put: 2,
     sender: 0
-  }
+  }.freeze
 
   TAX_FIXED = {
     withdraw: 0,
     put: 0,
-    sender: 20 
-  }
+    sender: 20
+  }.freeze
 
   def initialize
     @balance = 50.00
   end
 
   def card_number
-    @card_number ||= generate_card_number 
+    @card_number ||= generate_card_number
   end
 
   def withdraw_tax(amount:)
