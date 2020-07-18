@@ -121,6 +121,7 @@ class Account
     end
   end
 
+  ################################ CARD CREATION
   def create_card
     loop do
       puts 'You could create one of 3 card types'
@@ -129,7 +130,6 @@ class Account
       puts '- Virtual card. 1$ tax on card INCOME. 1$ tax on SENDING money from this card. 12% tax on WITHDRAWING money. For creation this card - press `virtual`'
       puts '- For exit - press `exit`'
 
-      ################################ CARD CREATION
       ct = gets.chomp
       if ct == 'usual' || ct == 'capitalist' || ct == 'virtual'
         if ct == 'usual'

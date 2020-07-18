@@ -13,6 +13,10 @@ class BasicCard
     sender: 0
   }.freeze
 
+  def type
+    @type ||= self.class.to_s[0...-4].downcase
+  end
+
   private
 
   def tax(amount:, percent:, fixed:)

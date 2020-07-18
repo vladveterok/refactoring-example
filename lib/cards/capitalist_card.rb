@@ -1,5 +1,5 @@
 class CapitalistCard < BasicCard
-  
+
   # in cents
   TAX_PERCENT = {
     withdraw: 4,
@@ -17,7 +17,7 @@ class CapitalistCard < BasicCard
     @balance = 100.00
   end
 
-  def card_number
-    @card_number ||= generate_card_number
+  def number
+    @number ||= generate_card_number
   end
 end

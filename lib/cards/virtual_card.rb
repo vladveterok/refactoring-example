@@ -17,7 +17,7 @@ class VirtualCard < BasicCard
     @balance = 150.00
   end
 
-  def card_number
-    @card_number ||= generate_card_number
+  def number
+    @number ||= generate_card_number
   end
 end

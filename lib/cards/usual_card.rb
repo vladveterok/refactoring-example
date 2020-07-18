@@ -17,8 +17,8 @@ class UsualCard < BasicCard
     @balance = 50.00
   end
 
-  def card_number
-    @card_number ||= generate_card_number
+  def number
+    @number ||= generate_card_number
   end
 
   def withdraw_tax(amount:)
@@ -32,8 +32,4 @@ class UsualCard < BasicCard
   def sender_tax(amount:)
     tax(amount, sender_tax_percent)
   end
-
-  private
-
 end
-
