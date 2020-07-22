@@ -95,7 +95,7 @@ RSpec.describe Account do
   }.freeze
 
   let(:current_subject) { described_class.new }
-
+=begin
   describe '#console' do
     context 'when correct method calling' do
       after do
@@ -127,7 +127,7 @@ RSpec.describe Account do
       end
     end
   end
-
+=end
   describe '#create' do
     let(:success_name_input) { 'Denis' }
     let(:success_age_input) { '72' }
