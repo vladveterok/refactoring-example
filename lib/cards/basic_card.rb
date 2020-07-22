@@ -1,4 +1,6 @@
 class BasicCard
+  attr_accessor :balance
+  attr_reader :number
   CARD_NUMBER_LENGTH = 16
 
   TAX_PERCENT = {
@@ -19,7 +21,7 @@ class BasicCard
 
   private
 
-  def tax(amount:, percent:, fixed:)
+  def tax(amount, percent, fixed)
     amount * percent / 100.0 + fixed
   end
 

@@ -1,9 +1,9 @@
 require 'yaml'
 require 'pry'
 
-require_relative 'bootstrap'
-
 class Account
+  include MoneyOperations
+
   attr_accessor :login, :name, :card, :password, :file_path
 
   def initialize
@@ -209,6 +209,7 @@ class Account
     end
   end
 
+=begin
   def withdraw_money
     puts 'Choose the card for withdrawing:'
     answer, a2, a3 = nil #answers for gets.chomp
@@ -388,7 +389,7 @@ class Account
       end
     end
   end
-
+=end
   def destroy_account
     puts 'Are you sure you want to destroy account?[y/n]'
     a = gets.chomp
