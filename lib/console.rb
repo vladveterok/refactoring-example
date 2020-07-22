@@ -56,8 +56,8 @@ class Console
 
   def name_input
     puts 'Enter your name'
-    name = gets.chomp.capitalize
-    unless name != ''
+    name = gets.chomp # .capitalize
+    unless name != '' && name[0].upcase == name[0]
       @errors.push('Your name must not be empty and starts with first upcase letter')
     end
     name
