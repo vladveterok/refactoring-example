@@ -156,6 +156,7 @@ RSpec.describe Console do
         end
         current_subject.create
       end
+      
 =begin #FOR ACCOUNT?????????
       it 'write to file Account instance' do
         current_subject.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
