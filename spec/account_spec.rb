@@ -266,7 +266,7 @@ RSpec.describe Account do
     end
 =end
   end
-
+=begin
   describe '#load' do
     context 'without active accounts' do
       it do
@@ -316,6 +316,7 @@ RSpec.describe Account do
       end
     end
   end
+=end
 
   describe '#create_the_first_account' do
     let(:cancel_input) { 'sdfsdfs' }

@@ -96,7 +96,7 @@ RSpec.describe Console do
 
   let(:current_subject) { described_class.new }
 
-  describe '#console', focus: true do
+  describe '#console' do
     context 'when correct method calling' do
       after do
         current_subject.console
@@ -128,7 +128,7 @@ RSpec.describe Console do
     end
   end
 
-  describe '#create', focus: true do
+  describe '#create' do
     let(:success_name_input) { 'Denis' }
     let(:success_age_input) { '72' }
     let(:success_login_input) { 'Denis' }
@@ -269,7 +269,7 @@ RSpec.describe Console do
     end
   end
 
-  describe '#load', focus: true do
+  describe '#load' do
     context 'without active accounts' do
       it do
         expect(current_subject).to receive(:accounts).and_return([])
@@ -317,6 +317,29 @@ RSpec.describe Console do
           expect { current_subject.load }.to output(/#{ERROR_PHRASES[:user_not_exists]}/).to_stdout
         end
       end
+    end
+  end
+
+  describe '#create_the_first_account' do
+    let(:cancel_input) { 'sdfsdfs' }
+    let(:success_input) { 'y' }
+
+    it 'with correct outout' do
+      expect(current_subject).to receive_message_chain(:gets, :chomp) {}
+      expect(current_subject).to receive(:console)
+      expect { current_subject.create_the_first_account }.to output(COMMON_PHRASES[:create_first_account]).to_stdout
+    end
+
+    it 'calls create if user inputs is y' do
+      expect(current_subject).to receive_message_chain(:gets, :chomp) { success_input }
+      expect(current_subject).to receive(:create)
+      current_subject.create_the_first_account
+    end
+
+    it 'calls console if user inputs is not y' do
+      expect(current_subject).to receive_message_chain(:gets, :chomp) { cancel_input }
+      expect(current_subject).to receive(:console)
+      current_subject.create_the_first_account
     end
   end
 end

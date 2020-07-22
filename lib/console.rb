@@ -164,9 +164,11 @@ class Console
     end
   end
 
+
+
+  private
+
   def accounts
     account.accounts
   end
-
-  # private
 end
