@@ -726,7 +726,7 @@ RSpec.describe Account do
             after do
               File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
             end
-
+=begin
             it do
               custom_cards.each do |custom_card|
                 allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*commands)
@@ -744,6 +744,7 @@ RSpec.describe Account do
                 expect(file_accounts.first.card.first.balance).to eq(new_balance)
               end
             end
+=end
           end
         end
       end
