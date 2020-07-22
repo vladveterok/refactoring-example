@@ -71,14 +71,15 @@ class Account
       if accounts.map { |a| { login: a.login, password: a.password } }.include?({ login: login, password: password })
         @current_account = accounts.select { |a| login == a.login }.first
         # break
-      else
-        puts 'There is no account with given credentials'
+      # else WITH SOME ERROR!!!!!!!!!!!!
+        # puts 'There is no account with given credentials'
         # next
       end
     # end
     # main_menu
   end
 
+=begin
   def create_the_first_account
     puts 'There is no active accounts, do you want to be the first?[y/n]'
     if gets.chomp == 'y'
@@ -87,7 +88,7 @@ class Account
       return console
     end
   end
-
+=end
   def main_menu
     loop do
       puts "\nWelcome, #{@current_account.name}"

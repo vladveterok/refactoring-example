@@ -26,7 +26,7 @@ class Console
 
   def load
     loop do
-      return create_the_first_account unless account.accounts.any?
+      return create_the_first_account unless accounts.any?
 
       puts 'Enter your login'
       login = gets.chomp
@@ -34,8 +34,18 @@ class Console
       password = gets.chomp
 
       break unless account.load(login, password).nil?
+      puts 'There is no account with given credentials'
     end
     main_menu
+  end
+
+  def create_the_first_account
+    puts 'There is no active accounts, do you want to be the first?[y/n]'
+    if gets.chomp == 'y'
+      return create
+    else
+      return console
+    end
   end
 
   def create
@@ -154,9 +164,9 @@ class Console
     end
   end
 
-  private
-
   def accounts
     account.accounts
   end
+
+  # private
 end
