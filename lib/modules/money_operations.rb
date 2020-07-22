@@ -143,13 +143,13 @@ module MoneyOperations
      loop do
        puts 'Input the amount of money you want to withdraw'
        a3 = gets.chomp
-       if a3&.to_i.to_i > 0
-         sender_balance = sender_card.balance - a3&.to_i.to_i - sender_tax(sender_card.type, sender_card.balance, sender_card.number, a3&.to_i.to_i)
-         recipient_balance = recipient_card.balance + a3&.to_i.to_i - put_tax(recipient_card.type, recipient_card.balance, recipient_card.number, a3&.to_i.to_i)
+       if a3.to_i.positive?
+         sender_balance = sender_card.balance - a3.to_i - sender_card.sender_tax(a3.to_i)
+         recipient_balance = recipient_card.balance + a3.to_i - recipient_card.put_tax(a3.to_i)
  
-         if sender_balance < 0
+         if sender_balance.negative?
            puts "You don't have enough money on card for such operation"
-         elsif put_tax(recipient_card.type, recipient_card.balance, recipient_card.number, a3&.to_i.to_i) >= a3&.to_i.to_i
+         elsif put_tax(recipient_card.type, recipient_card.balance, recipient_card.number, a3&.to_i.to_i) >= a3.to_i
            puts 'There is no enough money on sender card'
          else
            sender_card.balance = sender_balance

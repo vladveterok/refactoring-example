@@ -469,6 +469,7 @@ class Account
     end
   end
 
+=begin
   ################## TAXES
   def withdraw_tax(type, balance, number, amount)
     if type == 'usual'
@@ -503,4 +504,5 @@ class Account
     0
   end
   ################## TAXES END
+=end
 end
