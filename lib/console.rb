@@ -230,6 +230,12 @@ class Console
     end
   end
 
+  def destroy_account
+    puts 'Are you sure you want to destroy account?[y/n]'
+    a = gets.chomp
+    account.destroy_account if a == 'y'
+  end
+
   private
 
   def accounts

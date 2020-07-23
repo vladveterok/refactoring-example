@@ -219,9 +219,9 @@ class Account
   end
 
   def destroy_account
-    puts 'Are you sure you want to destroy account?[y/n]'
-    a = gets.chomp
-    if a == 'y'
+    # puts 'Are you sure you want to destroy account?[y/n]'
+    # a = gets.chomp
+    # if a == 'y'
       new_accounts = []
       accounts.each do |ac|
         if ac.login == @current_account.login
@@ -230,7 +230,7 @@ class Account
         end
       end
       File.open(@file_path, 'w') { |f| f.write new_accounts.to_yaml } #Storing
-    end
+    # end
   end
 
   def accounts

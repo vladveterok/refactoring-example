@@ -520,7 +520,51 @@ RSpec.describe Console do
           expect { current_subject.destroy_card }.not_to change(current_subject.account.card, :size)
         end
       end
+    end
+  end
 
+  describe '#destroy_account', focus: true do
+    let(:cancel_input) { 'sdfsdfs' }
+    let(:success_input) { 'y' }
+    let(:correct_login) { 'test' }
+    let(:fake_login) { 'test1' }
+    let(:fake_login2) { 'test2' }
+    let(:correct_account) { instance_double('Account', login: correct_login) }
+    let(:fake_account) { instance_double('Account', login: fake_login) }
+    let(:fake_account2) { instance_double('Account', login: fake_login2) }
+    let(:accounts) { [correct_account, fake_account, fake_account2] }
+
+    after do
+      File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
+    end
+
+    it 'with correct outout' do
+      expect(current_subject).to receive_message_chain(:gets, :chomp) {}
+      expect { current_subject.destroy_account }.to output(COMMON_PHRASES[:destroy_account]).to_stdout
+    end
+
+    context 'when deleting' do
+      it 'deletes account if user inputs is y' do
+        expect(current_subject).to receive_message_chain(:gets, :chomp) { success_input }
+        expect(current_subject.account).to receive(:accounts) { accounts }
+        current_subject.account.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
+        current_subject.account.instance_variable_set(:@current_account, instance_double('Account', login: correct_login))
+
+        current_subject.destroy_account
+
+        expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
+        file_accounts = YAML.load_file(OVERRIDABLE_FILENAME)
+        expect(file_accounts).to be_a Array
+        expect(file_accounts.size).to be 2
+      end
+
+      it 'doesnt delete account' do
+        expect(current_subject).to receive_message_chain(:gets, :chomp) { cancel_input }
+
+        current_subject.destroy_account
+
+        expect(File.exist?(OVERRIDABLE_FILENAME)).to be false
+      end
     end
   end
 end

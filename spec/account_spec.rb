@@ -385,8 +385,8 @@ RSpec.describe Account do
     end
   end
 =end
-
-  describe '#destroy_account' do
+=begin
+  describe '#destroy_account', focus: true do
     let(:cancel_input) { 'sdfsdfs' }
     let(:success_input) { 'y' }
     let(:correct_login) { 'test' }
@@ -430,6 +430,7 @@ RSpec.describe Account do
       end
     end
   end
+=end
 =begin
   describe '#show_cards', focus: true do
     let(:cards) { [{ number: 1234, type: 'a' }, { number: 5678, type: 'b' }] }
