@@ -60,7 +60,7 @@ RSpec.describe Console do
   ERROR_PHRASES = {
     user_not_exists: 'There is no account with given credentials',
     wrong_command: 'Wrong command. Try again!',
-    no_active_cards: "There is no active cards!\n",
+    no_active_cards: "There is no active cards!",
     wrong_card_type: "Wrong card type. Try again!\n",
     wrong_number: "You entered wrong number!\n",
     correct_amount: 'You must input correct amount of money',
@@ -156,18 +156,6 @@ RSpec.describe Console do
         end
         current_subject.create
       end
-
-=begin #FOR ACCOUNT?????????
-      it 'write to file Account instance' do
-        current_subject.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
-        current_subject.create
-        expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
-        accounts = YAML.load_file(OVERRIDABLE_FILENAME)
-        expect(accounts).to be_a Array
-        expect(accounts.size).to be 1
-        accounts.map { |account| expect(account).to be_a described_class }
-      end
-=end
     end
 
     context 'with errors' do
@@ -343,7 +331,7 @@ RSpec.describe Console do
     end
   end
 
-  describe '#main_menu', focus: true do
+  describe '#main_menu' do
     let(:name) { 'John' }
     let(:commands) do
       {
@@ -412,34 +400,6 @@ RSpec.describe Console do
         current_subject.create_card
       end
     end
-=begin
-    context 'when correct card choose' do
-      before do
-        allow(current_subject).to receive(:card).and_return([])
-        allow(current_subject).to receive(:accounts) { [current_subject] }
-        current_subject.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
-        current_subject.instance_variable_set(:@current_account, current_subject)
-      end
-
-      after do
-        File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
-      end
-
-      CARDS.each do |card_type, card_info|
-        it "create card with #{card_type} type" do
-          expect(current_subject).to receive_message_chain(:gets, :chomp) { card_info[:type] }
-
-          current_subject.create_card
-
-          expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
-          file_accounts = YAML.load_file(OVERRIDABLE_FILENAME)
-          expect(file_accounts.first.card.first.type).to eq card_info[:type]
-          expect(file_accounts.first.card.first.balance).to eq card_info[:balance]
-          expect(file_accounts.first.card.first.number.length).to be 16
-        end
-      end
-    end
-=end
 
     context 'when incorrect card choose' do
       it do
@@ -451,6 +411,23 @@ RSpec.describe Console do
 
         expect { current_subject.create_card }.to output(/#{ERROR_PHRASES[:wrong_card_type]}/).to_stdout
       end
+    end
+  end
+
+  describe '#show_cards', focus: true do
+    # let(:cards) { [{ number: 1234, type: 'a' }, { number: 5678, type: 'b' }] }
+    let(:cards) { [UsualCard.new, VirtualCard.new] }
+
+    it 'display cards if there are any' do
+      current_subject.account.instance_variable_set(:@current_account, instance_double('Account', card: cards))
+      cards.each { |card| expect(current_subject).to receive(:puts).with("- #{card.number}, #{card.type}") }
+      current_subject.show_cards
+    end
+
+    it 'outputs error if there are no active cards' do
+      current_subject.account.instance_variable_set(:@current_account, instance_double('Account', card: []))
+      expect(current_subject).to receive(:puts).with(ERROR_PHRASES[:no_active_cards])
+      current_subject.show_cards
     end
   end
 end

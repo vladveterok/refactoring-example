@@ -223,10 +223,6 @@ class Console
     end  
   end
 
-
-
-  private
-
   def show_cards
     if !account.show_cards.empty?
       account.show_cards.each { |card| puts "- #{card.number}, #{card.type}" }
@@ -234,6 +230,8 @@ class Console
       puts 'There is no active cards!'
     end
   end
+
+  private
 
   def accounts
     account.accounts

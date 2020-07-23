@@ -430,8 +430,8 @@ RSpec.describe Account do
       end
     end
   end
-
-  describe '#show_cards' do
+=begin
+  describe '#show_cards', focus: true do
     let(:cards) { [{ number: 1234, type: 'a' }, { number: 5678, type: 'b' }] }
 
     it 'display cards if there are any' do
@@ -446,8 +446,9 @@ RSpec.describe Account do
       current_subject.show_cards
     end
   end
+=end
 
-  describe '#create_card', focus: true do
+  describe '#create_card' do
 =begin
     context 'with correct outout' do
       it do
