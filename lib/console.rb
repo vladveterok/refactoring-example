@@ -87,22 +87,14 @@ class Console
   def login_input
     puts 'Enter your login'
     login = gets.chomp
-    if login == ''
-      @errors.push('Login must present')
-    end
 
-    if login.length < 4
-      @errors.push('Login must be longer then 4 symbols')
-    end
+    @errors.push('Login must present') if login == ''
+    @errors.push('Login must be longer then 4 symbols') if login.length < 4
+    @errors.push('Login must be shorter then 20 symbols') if login.length > 20
 
-    if login.length > 20
-      @errors.push('Login must be shorter then 20 symbols')
-    end
+    return login unless account.accounts.map(&:login).include? login
 
-    if accounts.map { |a| a.login }.include? login
-      @errors.push('Such account is already exists')
-    end
-    login
+    @errors.push('Such account is already exists')
   end
 
   def password_input
@@ -192,16 +184,58 @@ class Console
     end
   end
 
+  def destroy_card
+    loop do
+      if @current_account.card.any?
+        puts 'If you want to delete:'
+
+        @current_account.card.each_with_index do |c, i|
+          puts "- #{c[:number]}, #{c[:type]}, press #{i + 1}"
+        end
+        puts "press `exit` to exit\n"
+        answer = gets.chomp
+        break if answer == 'exit'
+        if answer&.to_i.to_i <= @current_account.card.length && answer&.to_i.to_i > 0
+          puts "Are you sure you want to delete #{@current_account.card[answer&.to_i.to_i - 1][:number]}?[y/n]"
+          a2 = gets.chomp
+          if a2 == 'y'
+            @current_account.card.delete_at(answer&.to_i.to_i - 1)
+            new_accounts = []
+            accounts.each do |ac|
+              if ac.login == @current_account.login
+                new_accounts.push(@current_account)
+              else
+                new_accounts.push(ac)
+              end
+            end
+            File.open(@file_path, 'w') { |f| f.write new_accounts.to_yaml } #Storing
+            break
+          else
+            return
+          end
+        else
+          puts "You entered wrong number!\n"
+        end
+      else
+        puts "There is no active cards!\n"
+        break
+      end
+    end  
+  end
+
 
 
   private
 
   def show_cards
-    account.show_cards
+    if !account.show_cards.empty?
+      account.show_cards.each { |card| puts "- #{card.number}, #{card.type}" }
+    else
+      puts 'There is no active cards!'
+    end
   end
 
   def accounts
     account.accounts
   end
-  
 end

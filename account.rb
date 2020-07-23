@@ -209,13 +209,13 @@ class Account
   end
 
   def show_cards
-    if @current_account.card.any?
-      @current_account.card.each do |c|
-        puts "- #{c.number}, #{c.type}"
-      end
-    else
-      puts "There is no active cards!\n"
-    end
+    # if @current_account.card.any?
+      @current_account.card # .each do |c|
+      #  puts "- #{c.number}, #{c.type}"
+      # end
+    # else
+    #  puts "There is no active cards!\n"
+    # end
   end
 
   def destroy_account
