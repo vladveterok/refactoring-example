@@ -464,7 +464,7 @@ RSpec.describe Account do
 =end
     context 'when correct card choose' do
       before do
-        # allow(current_subject).to receive(:card).and_return([])
+        # allow(current_subject).to receive(:card) # .and_return([])
         allow(current_subject).to receive(:accounts) { [current_subject] }
         current_subject.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
         current_subject.instance_variable_set(:@current_account, current_subject)
@@ -474,22 +474,23 @@ RSpec.describe Account do
         File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
       end
 
-      CARDS.each do |card_type, card_info|
+      CARDS.each do |card_type, card_instance|
         it "create card with #{card_type} type" do
-          # expect(current_subject).to receive_message_chain(:gets, :chomp) { card_info.type }
-          expect(current_subject).to receive(:card) { card_info }
+          # expect(current_subject).to receive_message_chain(:gets, :chomp) { card_instance.type }
+          expect(current_subject).to receive(:card) { card_instance }
 
           current_subject.create_card
 
           expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
           file_accounts = YAML.load_file(OVERRIDABLE_FILENAME)
-          expect(file_accounts.first.card.first.type).to eq card_info.type
-          expect(file_accounts.first.card.first.balance).to eq card_info.balance
-          expect(file_accounts.first.card.first.number.length).to be 16
+          # binding.pry
+          expect(file_accounts.first.card.type).to eq card_instance.type
+          expect(file_accounts.first.card.balance).to eq card_instance.balance
+          expect(file_accounts.first.card.number.length).to be 16
         end
       end
     end
-
+=begin
     context 'when incorrect card choose' do
       it do
         current_subject.instance_variable_set(:@card, [])
@@ -501,6 +502,7 @@ RSpec.describe Account do
         expect { current_subject.create_card }.to output(/#{ERROR_PHRASES[:wrong_card_type]}/).to_stdout
       end
     end
+=end
   end
 
   describe '#destroy_card' do

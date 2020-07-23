@@ -150,7 +150,7 @@ class Account
         # elsif ct == 'virtual'
         #  card = VirtualCard.new
         # end
-        cards = @current_account.card << card
+        cards = @current_account.card # << card
         @current_account.card = cards #important!!!
         new_accounts = []
         accounts.each do |ac|

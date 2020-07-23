@@ -175,11 +175,11 @@ class Console
       card = gets.chomp
       if card == 'usual' || card == 'capitalist' || card == 'virtual'
         if card == 'usual'
-          account.card = UsualCard.new
+          account.current_account.card << UsualCard.new
         elsif card == 'capitalist'
-          account.card = CapitalistCard.new
+          account.current_account.card << CapitalistCard.new
         elsif card == 'virtual'
-          account.card = VirtualCard.new
+          account.current_account.card << VirtualCard.new
         end
         account.create_card
         break
