@@ -342,4 +342,120 @@ RSpec.describe Console do
       current_subject.create_the_first_account
     end
   end
+
+  describe '#main_menu' do
+    let(:name) { 'John' }
+    let(:commands) do
+      {
+        'SC' => :show_cards,
+        'CC' => :create_card,
+        'DC' => :destroy_card,
+        'PM' => :put_money,
+        'WM' => :withdraw_money,
+        'SM' => :send_money,
+        'DA' => :destroy_account,
+        'exit' => :exit
+      }
+    end
+
+    context 'with correct outout' do
+      it 'receives name from account' do
+        allow(current_subject).to receive(:exit)
+        allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('exit')
+        current_subject.instance_variable_set(:@account, instance_double('Account', name: name))
+        expect { current_subject.main_menu }.to output(/Welcome, #{name}/).to_stdout
+      end
+
+      it do
+        allow(current_subject).to receive(:show_cards)
+        allow(current_subject).to receive(:exit)
+        allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('SC', 'exit')
+        # current_subject.instance_variable_set(:@current_account, instance_double('Account', name: name))
+        current_subject.account.instance_variable_set(:@current_account, instance_double('Account', name: name))
+        expect { current_subject.main_menu }.to output(/Welcome, #{name}/).to_stdout
+        MAIN_OPERATIONS_TEXTS.each do |text|
+          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('SC', 'exit')
+          expect { current_subject.main_menu }.to output(/#{text}/).to_stdout
+        end
+      end
+    end
+
+    context 'when commands used' do
+      let(:undefined_command) { 'undefined' }
+
+      it 'calls specific methods on predefined commands' do
+        current_subject.account.instance_variable_set(:@current_account, instance_double('Account', name: name))
+        allow(current_subject).to receive(:exit)
+
+        commands.each do |command, method_name|
+          expect(current_subject).to receive(method_name)
+          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(command, 'exit')
+          current_subject.main_menu
+        end
+      end
+
+      it 'outputs incorrect message on undefined command' do
+        current_subject.instance_variable_set(:@current_account, instance_double('Account', name: name))
+        expect(current_subject).to receive(:exit)
+        allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(undefined_command, 'exit')
+        expect { current_subject.main_menu }.to output(/#{ERROR_PHRASES[:wrong_command]}/).to_stdout
+      end
+    end
+  end
+
+  describe '#create_card', focus: true do
+    context 'with correct outout' do
+      it do
+        CREATE_CARD_PHRASES.each { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
+        # current_subject.instance_variable_set(:@card, [])
+        # current_subject.instance_variable_set(:@current_account, current_subject)
+        current_subject.account.instance_variable_set(:@card, [])
+        current_subject.account.instance_variable_set(:@current_account, current_subject)
+        allow_any_instance_of(Account).to receive(:accounts).and_return([])
+        allow(File).to receive(:open)
+        expect(current_subject).to receive_message_chain(:gets, :chomp) { 'usual' }
+
+        current_subject.create_card
+      end
+    end
+
+    context 'when correct card choose' do
+      before do
+        allow(current_subject).to receive(:card).and_return([])
+        allow(current_subject).to receive(:accounts) { [current_subject] }
+        current_subject.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
+        current_subject.instance_variable_set(:@current_account, current_subject)
+      end
+
+      after do
+        File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
+      end
+
+      CARDS.each do |card_type, card_info|
+        it "create card with #{card_type} type" do
+          expect(current_subject).to receive_message_chain(:gets, :chomp) { card_info[:type] }
+
+          current_subject.create_card
+
+          expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
+          file_accounts = YAML.load_file(OVERRIDABLE_FILENAME)
+          expect(file_accounts.first.card.first.type).to eq card_info[:type]
+          expect(file_accounts.first.card.first.balance).to eq card_info[:balance]
+          expect(file_accounts.first.card.first.number.length).to be 16
+        end
+      end
+    end
+
+    context 'when incorrect card choose' do
+      it do
+        current_subject.instance_variable_set(:@card, [])
+        current_subject.instance_variable_set(:@current_account, current_subject)
+        allow(File).to receive(:open)
+        allow(current_subject).to receive(:accounts).and_return([])
+        allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('test', 'usual')
+
+        expect { current_subject.create_card }.to output(/#{ERROR_PHRASES[:wrong_card_type]}/).to_stdout
+      end
+    end
+  end
 end

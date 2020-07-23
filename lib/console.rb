@@ -124,7 +124,7 @@ class Console
 
   def main_menu
     loop do
-      puts "\nWelcome, #{account.current_account.name}"
+      puts "\nWelcome, #{account.name}" # #{account.current_account.name}
       puts 'If you want to:'
       puts '- show all cards - press SC'
       puts '- create card - press CC'
@@ -142,25 +142,53 @@ class Console
   def commands(command)
     if command == 'SC' || command == 'CC' || command == 'DC' || command == 'PM' || command == 'WM' || command == 'SM' || command == 'DA' || command == 'exit'
       if command == 'SC'
-        account.show_cards
+        show_cards
       elsif command == 'CC'
-        account.create_card
+        create_card # account.create_card
       elsif command == 'DC'
-        account.destroy_card
+        destroy_card # account.destroy_card
       elsif command == 'PM'
-        account.put_money
+        put_money # account.put_money
       elsif command == 'WM'
-        account.withdraw_money
+        withdraw_money # account.withdraw_money
       elsif command == 'SM'
-        account.send_money
+        send_money # account.send_money
       elsif command == 'DA'
-        account.destroy_account
+        destroy_account # account.destroy_account
         exit
       elsif command == 'exit'
         exit
       end
     else
       puts "Wrong command. Try again!\n"
+    end    
+  end
+
+  def create_card
+    loop do
+      puts 'You could create one of 3 card types'
+      puts '- Usual card. 2% tax on card INCOME. 20$ tax on SENDING money from this card. 5% tax on WITHDRAWING money. For creation this card - press `usual`'
+      puts '- Capitalist card. 10$ tax on card INCOME. 10% tax on SENDING money from this card. 4$ tax on WITHDRAWING money. For creation this card - press `capitalist`'
+      puts '- Virtual card. 1$ tax on card INCOME. 1$ tax on SENDING money from this card. 12% tax on WITHDRAWING money. For creation this card - press `virtual`'
+      puts '- For exit - press `exit`'
+
+      card = gets.chomp
+      if card == 'usual' || card == 'capitalist' || card == 'virtual'
+        if card == 'usual'
+          account.card = UsualCard.new
+        elsif card == 'capitalist'
+          account.card = CapitalistCard.new
+        elsif card == 'virtual'
+          account.card = VirtualCard.new
+        end
+        account.create_card
+        break
+      else
+        puts "Wrong card type. Try again!\n"
+      end
+
+      # break unless account.load(login, password).nil?
+      # puts 'There is no account with given credentials'
     end
   end
 
@@ -168,7 +196,12 @@ class Console
 
   private
 
+  def show_cards
+    account.show_cards
+  end
+
   def accounts
     account.accounts
   end
+  
 end

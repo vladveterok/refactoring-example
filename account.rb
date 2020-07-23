@@ -16,6 +16,7 @@ class Account
     @password = nil
     @file_path = 'accounts.yml'
     @card = []
+    @current_account = nil
   end
 
 =begin
@@ -89,6 +90,7 @@ class Account
     end
   end
 =end
+=begin
   def main_menu
     loop do
       puts "\nWelcome, #{@current_account.name}"
@@ -129,25 +131,25 @@ class Account
       end
     end
   end
-
+=end
   ################################ CARD CREATION
   def create_card
-    loop do
-      puts 'You could create one of 3 card types'
-      puts '- Usual card. 2% tax on card INCOME. 20$ tax on SENDING money from this card. 5% tax on WITHDRAWING money. For creation this card - press `usual`'
-      puts '- Capitalist card. 10$ tax on card INCOME. 10% tax on SENDING money from this card. 4$ tax on WITHDRAWING money. For creation this card - press `capitalist`'
-      puts '- Virtual card. 1$ tax on card INCOME. 1$ tax on SENDING money from this card. 12% tax on WITHDRAWING money. For creation this card - press `virtual`'
-      puts '- For exit - press `exit`'
+    # loop do
+    #  puts 'You could create one of 3 card types'
+    #  puts '- Usual card. 2% tax on card INCOME. 20$ tax on SENDING money from this card. 5% tax on WITHDRAWING money. For creation this card - press `usual`'
+    #  puts '- Capitalist card. 10$ tax on card INCOME. 10% tax on SENDING money from this card. 4$ tax on WITHDRAWING money. For creation this card - press `capitalist`'
+    #  puts '- Virtual card. 1$ tax on card INCOME. 1$ tax on SENDING money from this card. 12% tax on WITHDRAWING money. For creation this card - press `virtual`'
+    #  puts '- For exit - press `exit`'
 
-      ct = gets.chomp
-      if ct == 'usual' || ct == 'capitalist' || ct == 'virtual'
-        if ct == 'usual'
-          card = UsualCard.new
-        elsif ct == 'capitalist'
-          card = CapitalistCard.new
-        elsif ct == 'virtual'
-          card = VirtualCard.new
-        end
+    #  ct = gets.chomp
+      # if ct == 'usual' || ct == 'capitalist' || ct == 'virtual'
+        # if ct == 'usual'
+        #  card = UsualCard.new
+        # elsif ct == 'capitalist'
+        #  card = CapitalistCard.new
+        # elsif ct == 'virtual'
+        #  card = VirtualCard.new
+        # end
         cards = @current_account.card << card
         @current_account.card = cards #important!!!
         new_accounts = []
@@ -159,11 +161,11 @@ class Account
           end
         end
         File.open(@file_path, 'w') { |f| f.write new_accounts.to_yaml } #Storing
-        break
-      else
-        puts "Wrong card type. Try again!\n"
-      end
-    end
+        # break
+      # else
+        # puts "Wrong card type. Try again!\n"
+      # end
+    # end
   end
   ################################ CARD CREATION ENDS
 
@@ -209,7 +211,7 @@ class Account
   def show_cards
     if @current_account.card.any?
       @current_account.card.each do |c|
-        puts "- #{c[:number]}, #{c[:type]}"
+        puts "- #{c.number}, #{c.type}"
       end
     else
       puts "There is no active cards!\n"
