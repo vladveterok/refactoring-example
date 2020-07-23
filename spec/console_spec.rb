@@ -414,7 +414,7 @@ RSpec.describe Console do
     end
   end
 
-  describe '#show_cards', focus: true do
+  describe '#show_cards' do
     # let(:cards) { [{ number: 1234, type: 'a' }, { number: 5678, type: 'b' }] }
     let(:cards) { [UsualCard.new, VirtualCard.new] }
 
@@ -428,6 +428,99 @@ RSpec.describe Console do
       current_subject.account.instance_variable_set(:@current_account, instance_double('Account', card: []))
       expect(current_subject).to receive(:puts).with(ERROR_PHRASES[:no_active_cards])
       current_subject.show_cards
+    end
+  end
+
+  describe '#destroy_card', focus: true do
+    context 'without cards' do
+      it 'shows message about not active cards' do
+        current_subject.account.instance_variable_set(:@current_account, instance_double('Account', card: []))
+        expect { current_subject.destroy_card }.to output(/#{ERROR_PHRASES[:no_active_cards]}/).to_stdout
+      end
+    end
+
+    context 'with cards' do
+      let(:card_one) { VirtualCard.new }
+      let(:card_two) { VirtualCard.new }
+      let(:fake_cards) { [card_one, card_two] }
+
+      context 'with correct outout' do
+        it do
+          # allow_any_instance_of(Account).to receive(:card) { fake_cards }
+          allow(current_subject.account).to receive(:card) { fake_cards }
+          current_subject.account.instance_variable_set(:@current_account, current_subject.account)
+          allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
+          expect { current_subject.destroy_card }.to output(/#{COMMON_PHRASES[:if_you_want_to_delete]}/).to_stdout
+          fake_cards.each_with_index do |card, i|
+            message = /- #{card.number}, #{card.type}, press #{i + 1}/
+            expect { current_subject.destroy_card }.to output(message).to_stdout
+          end
+          current_subject.destroy_card
+        end
+      end
+
+      context 'when exit if first gets is exit' do
+        it do
+          # allow_any_instance_of(Account).to receive(:card) { fake_cards }
+          allow(current_subject.account).to receive(:card) { fake_cards }
+          current_subject.account.instance_variable_set(:@current_account, current_subject.account)
+          expect(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
+          current_subject.destroy_card
+        end
+      end
+
+      context 'with incorrect input of card number' do
+        before do
+          allow(current_subject.account).to receive(:card) { fake_cards }
+          current_subject.account.instance_variable_set(:@current_account, current_subject.account)
+        end
+
+        it do
+          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(fake_cards.length + 1, 'exit')
+          expect { current_subject.destroy_card }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+        end
+
+        it do
+          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(-1, 'exit')
+          expect { current_subject.destroy_card }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+        end
+      end
+
+      context 'with correct input of card number' do
+        let(:accept_for_deleting) { 'y' }
+        let(:reject_for_deleting) { 'asdf' }
+        let(:deletable_card_number) { 1 }
+
+        before do
+          current_subject.account.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
+          current_subject.account.instance_variable_set(:@card, fake_cards)
+          allow(current_subject.account).to receive(:accounts) { [current_subject.account] }
+          current_subject.account.instance_variable_set(:@current_account, current_subject.account)
+        end
+
+        after do
+          File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
+        end
+
+        it 'accept deleting' do
+          commands = [deletable_card_number, accept_for_deleting]
+          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*commands)
+
+          expect { current_subject.destroy_card }.to change { current_subject.account.card.size }.by(-1)
+
+          expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
+          file_accounts = YAML.load_file(OVERRIDABLE_FILENAME)
+          expect(file_accounts.first.card).not_to include(card_one)
+        end
+
+        it 'decline deleting' do
+          commands = [deletable_card_number, reject_for_deleting]
+          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*commands)
+
+          expect { current_subject.destroy_card }.not_to change(current_subject.account.card, :size)
+        end
+      end
+
     end
   end
 end

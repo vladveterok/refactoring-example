@@ -128,6 +128,7 @@ class Console
       puts '- exit from account - press `exit`'
 
       commands(gets.chomp)
+      # puts "Wrong command. Try again!\n" if commands(gets.chomp).nil? # (gets.chomp)
     end
   end
 
@@ -185,30 +186,19 @@ class Console
   end
 
   def destroy_card
-    loop do
-      if @current_account.card.any?
+    if account.current_account.card.any?
+      loop do
         puts 'If you want to delete:'
+        show_cards_with_index
 
-        @current_account.card.each_with_index do |c, i|
-          puts "- #{c[:number]}, #{c[:type]}, press #{i + 1}"
-        end
         puts "press `exit` to exit\n"
         answer = gets.chomp
         break if answer == 'exit'
-        if answer&.to_i.to_i <= @current_account.card.length && answer&.to_i.to_i > 0
-          puts "Are you sure you want to delete #{@current_account.card[answer&.to_i.to_i - 1][:number]}?[y/n]"
-          a2 = gets.chomp
-          if a2 == 'y'
-            @current_account.card.delete_at(answer&.to_i.to_i - 1)
-            new_accounts = []
-            accounts.each do |ac|
-              if ac.login == @current_account.login
-                new_accounts.push(@current_account)
-              else
-                new_accounts.push(ac)
-              end
-            end
-            File.open(@file_path, 'w') { |f| f.write new_accounts.to_yaml } #Storing
+        if (1..account.current_account.card.length).include? answer.to_i
+          puts "Are you sure you want to delete #{account.current_account.card[answer.to_i - 1].number}?[y/n]"
+          answer2 = gets.chomp
+          if answer2 == 'y'
+            account.destroy_card(answer.to_i)
             break
           else
             return
@@ -216,16 +206,25 @@ class Console
         else
           puts "You entered wrong number!\n"
         end
-      else
-        puts "There is no active cards!\n"
-        break
       end
-    end  
+    else
+      puts "There is no active cards!\n"
+    end
   end
 
   def show_cards
     if !account.show_cards.empty?
       account.show_cards.each { |card| puts "- #{card.number}, #{card.type}" }
+    else
+      puts 'There is no active cards!'
+    end
+  end
+
+  def show_cards_with_index
+    if !account.show_cards.empty?
+      account.show_cards.each_with_index do |card, index|
+        puts "- #{card.number}, #{card.type}, press #{index + 1}"
+      end
     else
       puts 'There is no active cards!'
     end

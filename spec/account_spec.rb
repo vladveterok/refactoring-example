@@ -505,8 +505,9 @@ RSpec.describe Account do
     end
 =end
   end
+=begin
+  describe '#destroy_card', focus: true do
 
-  describe '#destroy_card' do
     context 'without cards' do
       it 'shows message about not active cards' do
         current_subject.instance_variable_set(:@current_account, instance_double('Account', card: []))
@@ -518,6 +519,7 @@ RSpec.describe Account do
       let(:card_one) { { number: 1, type: 'test' } }
       let(:card_two) { { number: 2, type: 'test2' } }
       let(:fake_cards) { [card_one, card_two] }
+
 
       context 'with correct outout' do
         it do
@@ -579,7 +581,7 @@ RSpec.describe Account do
           commands = [deletable_card_number, accept_for_deleting]
           allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*commands)
 
-          expect { current_subject.destroy_card }.to change { current_subject.card.size }.by(-1)
+          expect { current_subject.destroy_card(deletable_card_number) }.to change { current_subject.card.size }.by(-1)
 
           expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
           file_accounts = YAML.load_file(OVERRIDABLE_FILENAME)
@@ -589,13 +591,13 @@ RSpec.describe Account do
         it 'decline deleting' do
           commands = [deletable_card_number, reject_for_deleting]
           allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*commands)
-
-          expect { current_subject.destroy_card }.not_to change(current_subject.card, :size)
+          expect { current_subject.destroy_card(deletable_card_number) }.not_to change(current_subject.card, :size)
+          binding.pry
         end
       end
     end
   end
-
+=end
   describe '#put_money' do
     context 'without cards' do
       it 'shows message about not active cards' do
