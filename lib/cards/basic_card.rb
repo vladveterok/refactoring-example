@@ -39,6 +39,13 @@ class BasicCard
     balance!(new_money_amount)
   end
 
+  def send_money(amount)
+    money_left = balance - amount - sender_tax(amount)
+    raise BankErrors::NoMoneyError if money_left.negative?
+
+    balance!(money_left)
+  end
+
   private
 
   def tax(amount, percent, fixed)
