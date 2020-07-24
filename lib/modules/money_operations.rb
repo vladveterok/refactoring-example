@@ -13,10 +13,11 @@ module MoneyOperations
        break if answer == 'exit'
        if answer.to_i <= @current_account.card.length && answer.to_i.positive?
          current_card = @current_account.card[answer.to_i - 1]
-         # loop do
+         loop do
            puts 'Input the amount of money you want to withdraw'
            a2 = gets.chomp
            if a2.to_i > 0
+            ##### LOGIC STARTS
              money_left = current_card.balance - a2.to_i - current_card.withdraw_tax(a2.to_i)
              if money_left > 0
                current_card.balance = money_left
@@ -40,7 +41,7 @@ module MoneyOperations
              puts 'You must input correct amount of $'
              return
            end
-         # end
+         end
        else
          puts "You entered wrong number!\n"
          return

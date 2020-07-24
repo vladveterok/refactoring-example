@@ -96,6 +96,10 @@ RSpec.describe Console do
 
   let(:current_subject) { described_class.new }
 
+  before do
+    current_subject.account.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
+  end
+
   describe '#console' do
     context 'when correct method calling' do
       after do
@@ -206,7 +210,7 @@ RSpec.describe Console do
           let(:error) { ACCOUNT_VALIDATION_PHRASES[:login][:exists] }
 
           before do
-            allow(current_subject).to receive(:accounts) { [instance_double('Account', login: error_input)] }
+            allow(current_subject.account).to receive(:accounts) { [instance_double('Account', login: error_input)] }
           end
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
@@ -348,15 +352,14 @@ RSpec.describe Console do
 
     context 'with correct outout' do
       it do
-        # allow(current_subject).to receive(:show_cards)
-        allow(current_subject).to receive(:loop)
-        allow(current_subject).to receive(:commands)
-        # allow(current_subject).to receive(:exit)
-        allow(current_subject).to receive_message_chain(:gets, :chomp) #.and_return('SC', 'exit')
-        current_subject.account.instance_variable_set(:@current_account, instance_double('Account', name: name, card: []))
+        allow(current_subject).to receive(:show_cards)
+        allow(current_subject).to receive(:exit)
+        allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('exit')
+        current_subject.account.instance_variable_set(:@current_account, instance_double('Account', name: name))
+        # binding.pry
         expect { current_subject.main_menu }.to output(/Welcome, #{name}/).to_stdout
         MAIN_OPERATIONS_TEXTS.each do |text|
-          # allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('exit')
+          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('exit')
           expect { current_subject.main_menu }.to output(/#{text}/).to_stdout
         end
       end
@@ -492,7 +495,7 @@ RSpec.describe Console do
         let(:deletable_card_number) { 1 }
 
         before do
-          current_subject.account.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
+          # current_subject.account.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
           current_subject.account.instance_variable_set(:@card, fake_cards)
           allow(current_subject.account).to receive(:accounts) { [current_subject.account] }
           current_subject.account.instance_variable_set(:@current_account, current_subject.account)
@@ -547,7 +550,7 @@ RSpec.describe Console do
       it 'deletes account if user inputs is y' do
         expect(current_subject).to receive_message_chain(:gets, :chomp) { success_input }
         expect(current_subject.account).to receive(:accounts) { accounts }
-        current_subject.account.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
+        # current_subject.account.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
         current_subject.account.instance_variable_set(:@current_account, instance_double('Account', login: correct_login))
 
         current_subject.destroy_account

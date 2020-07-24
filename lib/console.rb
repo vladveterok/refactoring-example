@@ -116,7 +116,7 @@ class Console
 
   def main_menu
     loop do
-      puts "\nWelcome, #{account.name}" # #{account.current_account.name}
+      puts "\nWelcome, #{account.current_account.name}" # #{account.current_account.name}
       puts 'If you want to:'
       puts '- show all cards - press SC'
       puts '- create card - press CC'
@@ -127,7 +127,10 @@ class Console
       puts '- destroy account - press `DA`'
       puts '- exit from account - press `exit`'
 
-      commands(gets.chomp)
+      command = gets.chomp
+      break if command == 'exit'
+
+      commands(command)
       # puts "Wrong command. Try again!\n" if commands(gets.chomp).nil? # (gets.chomp)
     end
   end
@@ -143,7 +146,7 @@ class Console
       elsif command == 'PM'
         put_money # account.put_money
       elsif command == 'WM'
-        withdraw_money # account.withdraw_money
+        account.withdraw_money # account.withdraw_money
       elsif command == 'SM'
         send_money # account.send_money
       elsif command == 'DA'
@@ -154,7 +157,7 @@ class Console
       end
     else
       puts "Wrong command. Try again!\n"
-    end    
+    end
   end
 
   def create_card
