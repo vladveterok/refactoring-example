@@ -209,6 +209,41 @@ class Console
     account.destroy_account if a == 'y'
   end
 
+  def withdraw_money
+    puts 'Choose the card for withdrawing:'
+
+    if account.current_account.card.any?
+      show_cards_with_index
+      puts "press `exit` to exit\n"
+      loop do
+        answer_card = gets.chomp
+        break if answer_card == 'exit'
+
+        if answer_card.to_i <= account.current_account.card.length && answer_card.to_i.positive?
+          current_card = account.current_account.card[answer_card.to_i - 1]
+          loop do
+            puts 'Input the amount of money you want to withdraw'
+            answer_amount = gets.chomp
+            if answer_amount.to_i > 0
+              ##### CALL LOGIC STARTS
+              account.current_account.withdraw_money(current_card, answer_amount.to_i)
+              ##### CALL LOGIC ENDS
+              puts "Money #{answer_amount.to_i} withdrawed from #{current_card.number}$. Money left: #{current_card.balance}$. Tax: #{current_card.withdraw_tax(answer_amount.to_i)}$"
+            else
+              puts 'You must input correct amount of $'
+              return
+            end
+          end
+        else
+          puts "You entered wrong number!\n"
+          return
+        end
+      end
+    else
+      puts "There is no active cards!\n"
+    end
+  end
+
   private
 
   def name_input
@@ -232,8 +267,8 @@ class Console
   end
 
   def show_cards_with_index
-    if !account.show_cards.empty?
-      account.show_cards.each_with_index do |card, index|
+    if !account.current_account.show_cards.empty?
+      account.current_account.show_cards.each_with_index do |card, index|
         puts "- #{card.number}, #{card.type}, press #{index + 1}"
       end
     else
@@ -245,9 +280,9 @@ class Console
     account.accounts
   end
 
-  def withdraw_money
-    account.withdraw_money
-  end
+  # def withdraw_money
+  #  account.withdraw_money
+  # end
 
   def put_money
     account.put_money
