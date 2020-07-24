@@ -64,26 +64,6 @@ class Console
     main_menu
   end
 
-  def name_input
-    puts 'Enter your name'
-    name = gets.chomp # .capitalize
-    unless name != '' && name[0].upcase == name[0]
-      @errors.push('Your name must not be empty and starts with first upcase letter')
-    end
-    name
-  end
-
-  def age_input
-    puts 'Enter your age'
-    age = gets.chomp
-    if age.to_i.is_a?(Integer) && age.to_i >= 23 && age.to_i <= 90
-      age = age.to_i
-    else
-      @errors.push('Your Age must be greeter then 23 and lower then 90')
-    end
-    age
-  end
-
   def login_input
     puts 'Enter your login'
     login = gets.chomp
@@ -146,7 +126,7 @@ class Console
       elsif command == 'PM'
         put_money # account.put_money
       elsif command == 'WM'
-        account.withdraw_money # account.withdraw_money
+        withdraw_money # account.withdraw_money
       elsif command == 'SM'
         send_money # account.send_money
       elsif command == 'DA'
@@ -223,6 +203,34 @@ class Console
     end
   end
 
+  def destroy_account
+    puts 'Are you sure you want to destroy account?[y/n]'
+    a = gets.chomp
+    account.destroy_account if a == 'y'
+  end
+
+  private
+
+  def name_input
+    puts 'Enter your name'
+    name = gets.chomp # .capitalize
+    unless name != '' && name[0].upcase == name[0]
+      @errors.push('Your name must not be empty and starts with first upcase letter')
+    end
+    name
+  end
+
+  def age_input
+    puts 'Enter your age'
+    age = gets.chomp
+    if age.to_i.is_a?(Integer) && age.to_i >= 23 && age.to_i <= 90
+      age = age.to_i
+    else
+      @errors.push('Your Age must be greeter then 23 and lower then 90')
+    end
+    age
+  end
+
   def show_cards_with_index
     if !account.show_cards.empty?
       account.show_cards.each_with_index do |card, index|
@@ -233,15 +241,19 @@ class Console
     end
   end
 
-  def destroy_account
-    puts 'Are you sure you want to destroy account?[y/n]'
-    a = gets.chomp
-    account.destroy_account if a == 'y'
-  end
-
-  private
-
   def accounts
     account.accounts
+  end
+
+  def withdraw_money
+    account.withdraw_money
+  end
+
+  def put_money
+    account.put_money
+  end
+
+  def send_money
+    account.send_money
   end
 end
