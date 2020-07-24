@@ -32,6 +32,13 @@ class BasicCard
     balance!(money_left)
   end
 
+  def put_money(amount)
+    new_money_amount = balance + amount - put_tax(amount)
+    raise BankErrors::TaxTooHigh if put_tax(amount) >= amount
+
+    balance!(new_money_amount)
+  end
+
   private
 
   def tax(amount, percent, fixed)

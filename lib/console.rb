@@ -215,6 +215,7 @@ class Console
     if account.current_account.card.any?
       show_cards_with_index
       puts "press `exit` to exit\n"
+
       loop do
         answer_card = gets.chomp
         break if answer_card == 'exit'
@@ -224,13 +225,49 @@ class Console
           loop do
             puts 'Input the amount of money you want to withdraw'
             answer_amount = gets.chomp
-            if answer_amount.to_i > 0
+            if answer_amount.to_i.positive?
               ##### CALL LOGIC STARTS
               account.current_account.withdraw_money(current_card, answer_amount.to_i)
               ##### CALL LOGIC ENDS
               puts "Money #{answer_amount.to_i} withdrawed from #{current_card.number}$. Money left: #{current_card.balance}$. Tax: #{current_card.withdraw_tax(answer_amount.to_i)}$"
+              return
             else
               puts 'You must input correct amount of $'
+              return
+            end
+          end
+        else
+          puts "You entered wrong number!\n"
+          return
+        end
+      end
+    else
+      puts "There is no active cards!\n"
+    end
+  end
+
+  def put_money
+    puts 'Choose the card for putting:'
+
+    if account.current_account.card.any?
+      show_cards_with_index
+
+      puts "press `exit` to exit\n"
+      loop do
+        answer_card = gets.chomp
+        break if answer_card == 'exit'
+
+        if answer_card.to_i <= account.current_account.card.length && answer_card.to_i.positive?
+          current_card = account.current_account.card[answer_card.to_i - 1]
+          loop do
+            puts 'Input the amount of money you want to put on your card'
+            answer_amount = gets.chomp
+            if answer_amount.to_i.positive?
+              account.current_account.put_money(current_card, answer_amount.to_i)
+              puts "Money #{answer_amount&.to_i.to_i} was put on #{current_card.number}. Balance: #{current_card.balance}. Tax: #{current_card.put_tax(answer_amount.to_i)}"
+              return
+            else
+              puts 'You must input correct amount of money'
               return
             end
           end
@@ -284,9 +321,9 @@ class Console
   #  account.withdraw_money
   # end
 
-  def put_money
-    account.put_money
-  end
+  # def put_money
+  #  account.put_money
+  # end
 
   def send_money
     account.send_money
