@@ -25,9 +25,9 @@ class Account
   end
 
   def load(login, password)
-    if accounts.map { |a| { login: a.login, password: a.password } }.include?({ login: login, password: password })
-      @current_account = accounts.select { |a| login == a.login }.first
-    end
+    # if accounts.map { |a| { login: a.login, password: a.password } }.include?({ login: login, password: password })
+    @current_account = accounts.select { |a| login == a.login && password == a.password }.first
+    # end
   end
 
   def create_card
