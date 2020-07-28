@@ -16,6 +16,7 @@ class CapitalistCard < BasicCard
 
   def initialize
     @balance = 100.00
+    @number = generate_card_number
   end
 
   def number

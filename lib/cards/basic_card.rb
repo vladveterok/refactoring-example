@@ -17,10 +17,6 @@ class BasicCard
     sender: 0
   }.freeze
 
-  def initialize
-    generate_card_number
-  end
-
   def balance!(amount)
     @balance = amount
   end

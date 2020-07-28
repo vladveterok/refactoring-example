@@ -16,6 +16,7 @@ class VirtualCard < BasicCard
 
   def initialize
     @balance = 150.00
+    @number = generate_card_number
   end
 
   def number

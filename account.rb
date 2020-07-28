@@ -2,6 +2,7 @@ require 'yaml'
 require 'pry'
 
 class Account
+  include FileLoader
   include MoneyOperations
 
   attr_accessor :login, :name, :age, :card, :password, :file_path, :current_account
