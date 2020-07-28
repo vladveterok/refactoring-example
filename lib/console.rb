@@ -305,7 +305,6 @@ class Console
     puts 'Enter the recipient card:'
     answer_recipient_card = gets.chomp
     if answer_recipient_card.length > 15 && answer_recipient_card.length < 17
-      # recipient_account = account.accounts.find { |account| account.card.number ==  answer_recipient_card}
       all_cards = account.accounts.map(&:card).flatten
       if all_cards.map(&:number).any? answer_recipient_card # all_cards.select { |card| card.number == answer_recipient_card }.any?
         recipient_card = all_cards.select { |card| card.number == answer_recipient_card }.first
@@ -325,44 +324,12 @@ class Console
 
       return puts 'You entered wrong number!\n' unless answer_amount.to_i.positive?
 
-     #  account.current_account.send_money(sender_card, answer_amount.to_i)
-      # sender_balance = sender_card.balance - answer_amount.to_i - sender_card.sender_tax(answer_amount.to_i)
-
-      # recipient_balance = recipient_card.balance + answer_amount.to_i - recipient_card.put_tax(answer_amount.to_i)
-
       if answer_amount.to_i.positive? # sender_balance.negative?
-        # puts "You don't have enough money on card for such operation"
-      # elsif put_tax(recipient_card.type, recipient_card.balance, recipient_card.number, answer_amount.to_i) >= answer_amount.to_i
-      #  puts 'There is no enough money on sender card'
-      # else
-        # binding.pry
         account.current_account.send_money(sender_card, recipient_card, answer_amount.to_i)
-        # sender_card.balance = sender_balance
-        # @current_account.card[answer_sender_card.to_i - 1] = sender_card
-        # new_accounts = []
-        # accounts.each do |ac|
-        #  if ac.login == @current_account.login
-        #    new_accounts.push(@current_account)
-        #  elsif ac.card.map(&:number).include? answer_recipient_card
-        #    recipient = ac
-        #    new_recipient_cards = []
-        #    recipient.card.each do |card|
-        #      if card.number == answer_recipient_card
-        #        card.balance = recipient_balance
-        #      end
-        #      new_recipient_cards.push(card)
-        #    end
-        #    recipient.card = new_recipient_cards
-        #    new_accounts.push(recipient)
-        #  end
-        # end
-        # File.open('accounts.yml', 'w') { |f| f.write new_accounts.to_yaml }
         # puts "Money #{answer_amount.to_i}$ was put on #{sender_card.number}. Balance: #{recipient_balance}. Tax: #{put_tax(sender_card.type, sender_card.balance, sender_card.number, answer_amount.to_i)}$\n"
         # puts "Money #{answer_amount.to_i}$ was put on #{answer_recipient_card}. Balance: #{sender_balance}. Tax: #{sender_tax(sender_card.type, sender_card.balance, sender_card.number, answer_amount.to_i)}$\n"
         puts "Money #{answer_amount.to_i}$ was put on #{recipient_card.number}. Balance: #{sender_card.balance}. Tax: #{sender_card.sender_tax(answer_amount.to_i)}$\n"
-        # puts "Money #{answer_amount.to_i}$ was put on #{recipient_card.number}. Balance: #{sender_balance}. Tax: #{sender_tax(sender_card.type, sender_card.balance, sender_card.number, answer_amount.to_i)}$\n"
         break
-      # end
       else
         puts 'You entered wrong number!\n'
       end
