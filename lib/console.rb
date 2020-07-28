@@ -77,6 +77,7 @@ class Console
     @errors.push('Such account is already exists')
   end
 
+  #### MOVE errors into app?
   def password_input
     puts 'Enter your password'
     password = gets.chomp
@@ -196,8 +197,8 @@ class Console
   end
 
   def show_cards
-    if !account.show_cards.empty?
-      account.show_cards.each { |card| puts "- #{card.number}, #{card.type}" }
+    if !account.current_account.card.empty?
+      account.current_account.card.each { |card| puts "- #{card.number}, #{card.type}" }
     else
       puts 'There is no active cards!'
     end
@@ -209,6 +210,7 @@ class Console
     account.destroy_account if a == 'y'
   end
 
+  #### ERRORS INTO APPS?
   def withdraw_money
     puts 'Choose the card for withdrawing:'
 
@@ -246,6 +248,7 @@ class Console
     end
   end
 
+  #### ERRORS INTO APP?
   def put_money
     puts 'Choose the card for putting:'
 
@@ -281,6 +284,7 @@ class Console
     end
   end
 
+  #### ERRORS INTO APP?
   def send_money
     puts 'Choose the card for sending:'
 
@@ -359,8 +363,8 @@ class Console
   end
 
   def show_cards_with_index
-    if !account.current_account.show_cards.empty?
-      account.current_account.show_cards.each_with_index do |card, index|
+    if !account.current_account.card.empty?
+      account.current_account.card.each_with_index do |card, index|
         puts "- #{card.number}, #{card.type}, press #{index + 1}"
       end
     else

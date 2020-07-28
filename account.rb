@@ -8,7 +8,6 @@ class Account
   attr_accessor :login, :name, :age, :card, :password, :file_path, :current_account
 
   def initialize
-    # @errors = []
     @file_path = 'accounts.yml'
 
     @name = nil
@@ -23,7 +22,6 @@ class Account
     new_accounts = accounts << self
     @current_account = self
     save_in_file(new_accounts)
-    # File.open(@file_path, 'w') { |f| f.write new_accounts.to_yaml } #Storing
   end
 
   def load(login, password)
@@ -44,7 +42,6 @@ class Account
       end
     end
     save_in_file(new_accounts)
-    # File.open(@file_path, 'w') { |f| f.write new_accounts.to_yaml } #Storing
   end
 
   def destroy_card(card_number)
@@ -58,11 +55,6 @@ class Account
       end
     end
     save_in_file(new_accounts)
-    # File.open(@file_path, 'w') { |f| f.write new_accounts.to_yaml } #Storing
-  end
-
-  def show_cards ############# REPLACE WITH all_cards
-    @current_account.card # .each do |c|
   end
 
   def destroy_account
@@ -73,16 +65,11 @@ class Account
         new_accounts.push(ac)
       end
     end
-    # File.open(@file_path, 'w') { |f| f.write new_accounts.to_yaml } #Storing
     save_in_file(new_accounts)
   end
 
   def accounts
-    if File.exists?('accounts.yml')
-      YAML.load_file('accounts.yml')
-    else
-      []
-    end
+    File.exist?('accounts.yml') ? YAML.load_file('accounts.yml') : []
   end
 
   private
