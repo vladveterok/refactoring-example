@@ -19,14 +19,15 @@ class Account
   end
 
   def create
-    new_accounts = accounts << self
-    @current_account = self
+    # new_accounts = accounts << self
+    # binding.pry
+    new_accounts = accounts << @current_account = self
+    # @current_account = self
+    # binding.pry
     save_in_file(new_accounts)
   end
 
   def load(login, password)
-  # binding.pry
-    # @current_account = accounts.select { |a| login == a.login && password == a.password }.first
     @current_account = accounts.find { |a| login == a.login && password == a.password }
   end
 
@@ -50,6 +51,7 @@ class Account
   end
 
   def accounts
+    # binding.pry
     File.exist?('accounts.yml') ? YAML.load_file('accounts.yml') : []
   end
 
