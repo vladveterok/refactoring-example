@@ -176,77 +176,61 @@ class Console
 
   #### ERRORS INTO APPS?
   def withdraw_money
-    # puts 'Choose the card for withdrawing:'
-    # return puts "There is no active cards!\n" unless account.current_account.card.any?
-    account.current_account.card.any? ? (puts 'Choose the card for withdrawing:') : (return puts "There is no active cards!\n")
-    # if account.current_account.card.any?
+    account.current_account.card.any? ? (puts 'Choose the card for withdrawing:') : (return puts 'There is no active cards!')
     show_cards_with_index
-    puts "press `exit` to exit\n"
+    puts "press `exit` to exit"
 
-    # loop do
     answer_card = gets.chomp
     return if answer_card == 'exit'
-
-    return puts "You entered wrong number!\n" unless answer_card.to_i <= account.current_account.card.length
-    return puts "You entered wrong number!\n" unless answer_card.to_i.positive?
+    return puts 'You entered wrong number!' unless (1..account.current_account.card.length).include? answer_card.to_i
 
     current_card = account.current_account.card[answer_card.to_i - 1]
-    # loop do
+
     puts 'Input the amount of money you want to withdraw'
     answer_amount = gets.chomp
     return puts 'You must input correct amount of $' unless answer_amount.to_i.positive?
 
     account.current_account.withdraw_money(current_card, answer_amount.to_i)
     puts "Money #{answer_amount.to_i} withdrawed from #{current_card.number}$. Money left: #{current_card.balance}$. Tax: #{current_card.withdraw_tax(answer_amount.to_i)}$"
-    # else
-      
-    # end
-    # return
-      # end
-      # else
-      #  puts "You entered wrong number!\n"
-      #  return
-      # end
-    # end
-    # else
-    #  puts "There is no active cards!\n"
-    # end
   end
 
   #### ERRORS INTO APP?
   def put_money
-    puts 'Choose the card for putting:'
+    # puts 'Choose the card for putting:'
+    account.current_account.card.any? ? (puts 'Choose the card for putting:') : (return puts 'There is no active cards!')
 
-    if account.current_account.card.any?
-      show_cards_with_index
+    # if account.current_account.card.any?
+    show_cards_with_index
 
-      puts "press `exit` to exit\n"
-      loop do
-        answer_card = gets.chomp
-        break if answer_card == 'exit'
+    puts "press `exit` to exit\n"
+    # loop do
+    answer_card = gets.chomp
+    return if answer_card == 'exit'
+    return puts "You entered wrong number!" unless (1..account.current_account.card.length).include? answer_card.to_i
+    
+    # if answer_card.to_i <= account.current_account.card.length && answer_card.to_i.positive?
+    current_card = account.current_account.card[answer_card.to_i - 1]
+    # loop do
+    puts 'Input the amount of money you want to put on your card'
+    answer_amount = gets.chomp
+    # if answer_amount.to_i.positive?
+    return puts 'You must input correct amount of money' unless answer_amount.to_i.positive?
 
-        if answer_card.to_i <= account.current_account.card.length && answer_card.to_i.positive?
-          current_card = account.current_account.card[answer_card.to_i - 1]
-          loop do
-            puts 'Input the amount of money you want to put on your card'
-            answer_amount = gets.chomp
-            if answer_amount.to_i.positive?
-              account.current_account.put_money(current_card, answer_amount.to_i)
-              puts "Money #{answer_amount&.to_i.to_i} was put on #{current_card.number}. Balance: #{current_card.balance}. Tax: #{current_card.put_tax(answer_amount.to_i)}"
-              return
-            else
-              puts 'You must input correct amount of money'
-              return
-            end
-          end
-        else
-          puts "You entered wrong number!\n"
-          return
-        end
-      end
-    else
-      puts "There is no active cards!\n"
-    end
+    account.current_account.put_money(current_card, answer_amount.to_i)
+    puts "Money #{answer_amount&.to_i.to_i} was put on #{current_card.number}. Balance: #{current_card.balance}. Tax: #{current_card.put_tax(answer_amount.to_i)}"
+    # else
+    #  puts 'You must input correct amount of money'
+    #  return
+    # end
+          # end
+        # else
+        #  puts "You entered wrong number!\n"
+        #  return
+        # end
+      # end
+    # else
+    #  puts "There is no active cards!\n"
+    # end
   end
 
   #### ERRORS INTO APP?
