@@ -81,17 +81,11 @@ class Console
   def password_input
     puts 'Enter your password'
     password = gets.chomp
-    if password == ''
-      @errors.push('Password must present')
-    end
 
-    if password.length < 6
-      @errors.push('Password must be longer then 6 symbols')
-    end
+    @errors.push('Password must present') if password == ''
+    @errors.push('Password must be longer then 6 symbols') if password.length < 6
+    @errors.push('Password must be shorter then 30 symbols') if password.length > 30
 
-    if password.length > 30
-      @errors.push('Password must be shorter then 30 symbols')
-    end
     password
   end
 

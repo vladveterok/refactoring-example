@@ -25,14 +25,12 @@ class Account
   end
 
   def load(login, password)
-    # if accounts.map { |a| { login: a.login, password: a.password } }.include?({ login: login, password: password })
     @current_account = accounts.select { |a| login == a.login && password == a.password }.first
-    # end
   end
 
   def create_card
-    # cards = @current_account.card # << card
-    # @current_account.card = cards #important!!!
+    # cards = @current_account.card
+    # @current_account.card = cards
     new_accounts = []
     accounts.each do |account|
       account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
@@ -62,6 +60,10 @@ class Account
   end
 
   private
+
+  def prepare_data_for_saving
+    # Some code here
+  end
 
   def save_in_file(data)
     File.open(@file_path, 'w') { |f| f.write data.to_yaml }
