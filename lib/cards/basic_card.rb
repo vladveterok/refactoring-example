@@ -17,10 +17,6 @@ class BasicCard
     sender: 0
   }.freeze
 
-  # def initialize
-  #  type
-  # end
-
   def balance!(amount)
     @balance = amount
   end
