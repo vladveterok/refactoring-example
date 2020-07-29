@@ -56,31 +56,6 @@ class Console
     main_menu
   end
 
-  def login_input
-    puts 'Enter your login'
-    login = gets.chomp
-
-    @errors.push('Login must present') if login == ''
-    @errors.push('Login must be longer then 4 symbols') if login.length < 4
-    @errors.push('Login must be shorter then 20 symbols') if login.length > 20
-
-    return login unless account.accounts.map(&:login).include? login
-
-    @errors.push('Such account is already exists')
-  end
-
-  #### MOVE errors into app?
-  def password_input
-    puts 'Enter your password'
-    password = gets.chomp
-
-    @errors.push('Password must present') if password == ''
-    @errors.push('Password must be longer then 6 symbols') if password.length < 6
-    @errors.push('Password must be shorter then 30 symbols') if password.length > 30
-
-    password
-  end
-
   def main_menu
     loop do
       puts "\nWelcome, #{account.current_account.name}" # #{account.current_account.name}
@@ -174,21 +149,42 @@ class Console
   def name_input
     puts 'Enter your name'
     name = gets.chomp # .capitalize
-    unless name != '' && name[0].upcase == name[0]
-      @errors.push('Your name must not be empty and starts with first upcase letter')
-    end
-    name
+    return name if name != '' && name.capitalize == name
+
+    @errors.push('Your name must not be empty and starts with first upcase letter')
   end
 
   def age_input
     puts 'Enter your age'
     age = gets.chomp
-    if age.to_i.is_a?(Integer) && age.to_i >= 23 && age.to_i <= 90
-      age = age.to_i
-    else
-      @errors.push('Your Age must be greeter then 23 and lower then 90')
-    end
-    age
+    return age.to_i if age.to_i.is_a?(Integer) && age.to_i >= 23 && age.to_i <= 90
+
+    @errors.push('Your Age must be greeter then 23 and lower then 90')
+  end
+
+  def login_input
+    puts 'Enter your login'
+    login = gets.chomp
+
+    @errors.push('Login must present') if login == ''
+    @errors.push('Login must be longer then 4 symbols') if login.length < 4
+    @errors.push('Login must be shorter then 20 symbols') if login.length > 20
+
+    return login unless account.accounts.map(&:login).include? login
+
+    @errors.push('Such account is already exists')
+  end
+
+  #### MOVE errors into app?
+  def password_input
+    puts 'Enter your password'
+    password = gets.chomp
+
+    @errors.push('Password must present') if password == ''
+    @errors.push('Password must be longer then 6 symbols') if password.length < 6
+    @errors.push('Password must be shorter then 30 symbols') if password.length > 30
+
+    password
   end
 
   def choose_the_card(operation)
