@@ -56,10 +56,6 @@ class Console
       break if @errors.empty?
 
       return_errors
-      # @errors.each do |e|
-      #  puts e
-      # end
-      # @errors = []
     end
     account.create
     main_menu
@@ -109,6 +105,10 @@ class Console
       commands(command)
       # puts "Wrong command. Try again!\n" if commands(gets.chomp).nil? # (gets.chomp)
     end
+
+  rescue BankErrors::BankError => e
+    puts e.message
+    retry
   end
 
   def commands(command)
@@ -143,31 +143,29 @@ class Console
   end
 
   def destroy_card
-    if account.current_account.card.any?
-      loop do
-        puts 'If you want to delete:'
-        show_cards_with_index
+    return puts "There is no active cards!\n" unless account.current_account.card.any?
 
-        puts "press `exit` to exit\n"
-        answer = gets.chomp
-        break if answer == 'exit'
+    loop do
+      puts 'If you want to delete:'
+      show_cards_with_index
+      puts "press `exit` to exit\n"
 
-        if (1..account.current_account.card.length).include? answer.to_i
-          puts "Are you sure you want to delete #{account.current_account.card[answer.to_i - 1].number}?[y/n]"
-          answer2 = gets.chomp
-          if answer2 == 'y'
-            account.destroy_card(answer.to_i)
-            break
-          else
-            return
-          end
-        else
-          puts "You entered wrong number!\n"
-        end
-      end
-    else
-      puts "There is no active cards!\n"
+      answer = gets.chomp
+      break if answer == 'exit'
+      next puts "You entered wrong number!\n" unless (1..account.current_account.card.length).include? answer.to_i
+
+      puts "Are you sure you want to delete #{account.current_account.card[answer.to_i - 1].number}?[y/n]"
+      # answer2 = gets.chomp
+      # answer2 == 'y' ? account.destroy_card(answer.to_i) : return
+      gets.chomp == 'y' ? account.destroy_card(answer.to_i) : return
+      break
+      # else
+      # puts "You entered wrong number!\n"
+      # end
     end
+    # else
+    #  puts "There is no active cards!\n"
+    # end
   end
 
   def show_cards

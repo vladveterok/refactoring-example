@@ -42,6 +42,8 @@ class Account
   end
 
   def destroy_card(card_number)
+    raise NoActiveCard unless @current_account.card.any?
+
     @current_account.card.delete_at(card_number - 1)
     update_account
   end

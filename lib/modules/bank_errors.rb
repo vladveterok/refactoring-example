@@ -17,4 +17,10 @@ module BankErrors
       'Wrong card type. Try again!'
     end
   end
+
+  class NoActiveCard < BankError
+    def message
+      'There is no active cards!\n'
+    end
+  end
 end
