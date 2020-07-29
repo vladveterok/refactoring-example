@@ -176,11 +176,7 @@ class Console
 
   #### ERRORS INTO APPS?
   def withdraw_money
-    account.current_account.card.any? ? (puts 'Choose the card for withdrawing:') : (return puts 'There is no active cards!')
-    show_cards_with_index
-    puts "press `exit` to exit"
-
-    answer_card = gets.chomp
+    answer_card = choose_the_card('withdrawing:')
     return if answer_card == 'exit'
     return puts 'You entered wrong number!' unless (1..account.current_account.card.length).include? answer_card.to_i
 
@@ -196,41 +192,18 @@ class Console
 
   #### ERRORS INTO APP?
   def put_money
-    # puts 'Choose the card for putting:'
-    account.current_account.card.any? ? (puts 'Choose the card for putting:') : (return puts 'There is no active cards!')
-
-    # if account.current_account.card.any?
-    show_cards_with_index
-
-    puts "press `exit` to exit\n"
-    # loop do
-    answer_card = gets.chomp
+    answer_card = choose_the_card('putting:')
     return if answer_card == 'exit'
-    return puts "You entered wrong number!" unless (1..account.current_account.card.length).include? answer_card.to_i
-    
-    # if answer_card.to_i <= account.current_account.card.length && answer_card.to_i.positive?
+    return puts 'You entered wrong number!' unless (1..account.current_account.card.length).include? answer_card.to_i
+
     current_card = account.current_account.card[answer_card.to_i - 1]
-    # loop do
+
     puts 'Input the amount of money you want to put on your card'
     answer_amount = gets.chomp
-    # if answer_amount.to_i.positive?
     return puts 'You must input correct amount of money' unless answer_amount.to_i.positive?
 
     account.current_account.put_money(current_card, answer_amount.to_i)
     puts "Money #{answer_amount&.to_i.to_i} was put on #{current_card.number}. Balance: #{current_card.balance}. Tax: #{current_card.put_tax(answer_amount.to_i)}"
-    # else
-    #  puts 'You must input correct amount of money'
-    #  return
-    # end
-          # end
-        # else
-        #  puts "You entered wrong number!\n"
-        #  return
-        # end
-      # end
-    # else
-    #  puts "There is no active cards!\n"
-    # end
   end
 
   #### ERRORS INTO APP?
@@ -309,6 +282,13 @@ class Console
       @errors.push('Your Age must be greeter then 23 and lower then 90')
     end
     age
+  end
+
+  def choose_the_card(operation)
+    account.current_account.card.any? ? (puts "Choose the card for #{operation}") : (return puts 'There is no active cards!')
+    show_cards_with_index
+    puts "press `exit` to exit"
+    gets.chomp
   end
 
   def show_cards_with_index
