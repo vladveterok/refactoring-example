@@ -29,22 +29,24 @@ class Account
   end
 
   def create_card
-    # cards = @current_account.card
-    # @current_account.card = cards
-    new_accounts = []
-    accounts.each do |account|
-      account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
-    end
-    save_in_file(new_accounts)
+    cards = @current_account.card
+    @current_account.card = cards
+    # new_accounts = []
+    # accounts.each do |account| #### 1
+    #  account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
+    # end
+    # save_in_file(new_accounts)
+    update_account
   end
 
   def destroy_card(card_number)
     @current_account.card.delete_at(card_number - 1)
-    new_accounts = []
-    accounts.each do |account|
-      account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
-    end
-    save_in_file(new_accounts)
+    # new_accounts = []
+    # accounts.each do |account| #### 2
+    #  account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
+    # end
+    # save_in_file(new_accounts)
+    update_account
   end
 
   def destroy_account
@@ -61,8 +63,12 @@ class Account
 
   private
 
-  def prepare_data_for_saving
-    # Some code here
+  def update_account
+    new_accounts = []
+    accounts.each do |account| #### 1
+      account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
+    end
+    save_in_file(new_accounts)
   end
 
   def save_in_file(data)
