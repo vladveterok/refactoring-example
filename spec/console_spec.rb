@@ -305,7 +305,8 @@ RSpec.describe Console do
         let(:all_inputs) { ['test', 'test', login, password] }
 
         it do
-          expect(current_subject).to receive(:main_menu)
+          # expect(current_subject).to receive(:main_menu)
+          expect(current_subject).to receive(:console)
           expect { current_subject.load }.to output(/#{ERROR_PHRASES[:user_not_exists]}/).to_stdout
         end
       end

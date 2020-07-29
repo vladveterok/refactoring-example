@@ -25,7 +25,7 @@ class Console
   end
 
   def load
-    loop do
+    # loop do
       return create_the_first_account unless accounts.any?
 
       puts 'Enter your login'
@@ -33,11 +33,12 @@ class Console
       puts 'Enter your password'
       password = gets.chomp
 
-      break unless account.load(login, password).nil?
-
+     #  break unless account.load(login, password).nil?
+      return main_menu unless account.load(login, password).nil?
       puts 'There is no account with given credentials'
-    end
-    main_menu
+      console
+    # end
+    # main_menu
   end
 
   def create_the_first_account
@@ -119,30 +120,6 @@ class Console
     when 'DA' then destroy_account
     else puts "Wrong command. Try again!\n"
     end
-=begin
-    if command == 'SC' || command == 'CC' || command == 'DC' || command == 'PM' || command == 'WM' || command == 'SM' || command == 'DA' || command == 'exit'
-      if command == 'SC'
-        show_cards
-      elsif command == 'CC'
-        create_card # account.create_card
-      elsif command == 'DC'
-        destroy_card # account.destroy_card
-      elsif command == 'PM'
-        put_money # account.put_money
-      elsif command == 'WM'
-        withdraw_money # account.withdraw_money
-      elsif command == 'SM'
-        send_money # account.send_money
-      elsif command == 'DA'
-        destroy_account # account.destroy_account
-        exit
-      elsif command == 'exit'
-        exit
-      end
-    else
-      puts "Wrong command. Try again!\n"
-    end
-=end
   end
 
   def create_card
