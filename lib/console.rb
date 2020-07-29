@@ -176,40 +176,41 @@ class Console
 
   #### ERRORS INTO APPS?
   def withdraw_money
-    puts 'Choose the card for withdrawing:'
+    # puts 'Choose the card for withdrawing:'
+    # return puts "There is no active cards!\n" unless account.current_account.card.any?
+    account.current_account.card.any? ? (puts 'Choose the card for withdrawing:') : (return puts "There is no active cards!\n")
+    # if account.current_account.card.any?
+    show_cards_with_index
+    puts "press `exit` to exit\n"
 
-    if account.current_account.card.any?
-      show_cards_with_index
-      puts "press `exit` to exit\n"
+    # loop do
+    answer_card = gets.chomp
+    return if answer_card == 'exit'
 
-      loop do
-        answer_card = gets.chomp
-        break if answer_card == 'exit'
+    return puts "You entered wrong number!\n" unless answer_card.to_i <= account.current_account.card.length
+    return puts "You entered wrong number!\n" unless answer_card.to_i.positive?
 
-        if answer_card.to_i <= account.current_account.card.length && answer_card.to_i.positive?
-          current_card = account.current_account.card[answer_card.to_i - 1]
-          loop do
-            puts 'Input the amount of money you want to withdraw'
-            answer_amount = gets.chomp
-            if answer_amount.to_i.positive?
-              ##### CALL LOGIC STARTS
-              account.current_account.withdraw_money(current_card, answer_amount.to_i)
-              ##### CALL LOGIC ENDS
-              puts "Money #{answer_amount.to_i} withdrawed from #{current_card.number}$. Money left: #{current_card.balance}$. Tax: #{current_card.withdraw_tax(answer_amount.to_i)}$"
-              return
-            else
-              puts 'You must input correct amount of $'
-              return
-            end
-          end
-        else
-          puts "You entered wrong number!\n"
-          return
-        end
-      end
-    else
-      puts "There is no active cards!\n"
-    end
+    current_card = account.current_account.card[answer_card.to_i - 1]
+    # loop do
+    puts 'Input the amount of money you want to withdraw'
+    answer_amount = gets.chomp
+    return puts 'You must input correct amount of $' unless answer_amount.to_i.positive?
+
+    account.current_account.withdraw_money(current_card, answer_amount.to_i)
+    puts "Money #{answer_amount.to_i} withdrawed from #{current_card.number}$. Money left: #{current_card.balance}$. Tax: #{current_card.withdraw_tax(answer_amount.to_i)}$"
+    # else
+      
+    # end
+    # return
+      # end
+      # else
+      #  puts "You entered wrong number!\n"
+      #  return
+      # end
+    # end
+    # else
+    #  puts "There is no active cards!\n"
+    # end
   end
 
   #### ERRORS INTO APP?
