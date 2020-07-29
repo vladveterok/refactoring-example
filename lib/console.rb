@@ -34,7 +34,7 @@ class Console
       password = gets.chomp
 
       break unless account.load(login, password).nil?
-      
+
       puts 'There is no account with given credentials'
     end
     main_menu
@@ -52,6 +52,7 @@ class Console
       account.login = login_input
       account.password = password_input
       break if @errors.empty?
+
       @errors.each do |e|
         puts e
       end
@@ -108,6 +109,17 @@ class Console
   end
 
   def commands(command)
+    case command
+    when 'SC' then show_cards
+    when 'CC' then create_card
+    when 'DC' then destroy_card
+    when 'PM' then put_money
+    when 'WM' then withdraw_money
+    when 'SM' then send_money
+    when 'DA' then destroy_account
+    else puts "Wrong command. Try again!\n"
+    end
+=begin
     if command == 'SC' || command == 'CC' || command == 'DC' || command == 'PM' || command == 'WM' || command == 'SM' || command == 'DA' || command == 'exit'
       if command == 'SC'
         show_cards
@@ -130,6 +142,7 @@ class Console
     else
       puts "Wrong command. Try again!\n"
     end
+=end
   end
 
   def create_card
