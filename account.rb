@@ -25,27 +25,19 @@ class Account
   end
 
   def load(login, password)
-    @current_account = accounts.select { |a| login == a.login && password == a.password }.first
+  # binding.pry
+    # @current_account = accounts.select { |a| login == a.login && password == a.password }.first
+    @current_account = accounts.find { |a| login == a.login && password == a.password }
   end
 
   def create_card
     cards = @current_account.card
     @current_account.card = cards
-    # new_accounts = []
-    # accounts.each do |account| #### 1
-    #  account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
-    # end
-    # save_in_file(new_accounts)
     update_account
   end
 
   def destroy_card(card_number)
     @current_account.card.delete_at(card_number - 1)
-    # new_accounts = []
-    # accounts.each do |account| #### 2
-    #  account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
-    # end
-    # save_in_file(new_accounts)
     update_account
   end
 
@@ -65,7 +57,7 @@ class Account
 
   def update_account
     new_accounts = []
-    accounts.each do |account| #### 1
+    accounts.each do |account|
       account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
     end
     save_in_file(new_accounts)
@@ -74,8 +66,4 @@ class Account
   def save_in_file(data)
     File.open(@file_path, 'w') { |f| f.write data.to_yaml }
   end
-
-  # def save_in_file(data)
-  #  File.open(@file_path, 'a') { |f| f.write data.to_yaml }
-  # end
 end
