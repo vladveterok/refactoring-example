@@ -26,17 +26,18 @@ class Console
 
   def load
     # loop do
-      return create_the_first_account unless accounts.any?
+    return create_the_first_account unless accounts.any?
 
-      puts 'Enter your login'
-      login = gets.chomp
-      puts 'Enter your password'
-      password = gets.chomp
+    puts 'Enter your login'
+    login = gets.chomp
+    puts 'Enter your password'
+    password = gets.chomp
 
-     #  break unless account.load(login, password).nil?
-      return main_menu unless account.load(login, password).nil?
-      puts 'There is no account with given credentials'
-      console
+    # break unless account.load(login, password).nil?
+    return main_menu unless account.load(login, password).nil?
+
+    puts 'There is no account with given credentials'
+    console
     # end
     # main_menu
   end
@@ -54,10 +55,11 @@ class Console
       account.password = password_input
       break if @errors.empty?
 
-      @errors.each do |e|
-        puts e
-      end
-      @errors = []
+      return_errors
+      # @errors.each do |e|
+      #  puts e
+      # end
+      # @errors = []
     end
     account.create
     main_menu
@@ -346,5 +348,12 @@ class Console
 
   def accounts
     account.accounts
+  end
+
+  def return_errors
+    @errors.each do |e|
+      puts e
+    end
+    @errors = []
   end
 end
