@@ -149,22 +149,7 @@ class Console
       exit if card == 'exit'
       account.create_card(card)
       break
-      # if card == 'usual' || card == 'capitalist' || card == 'virtual'
-      #  if card == 'usual'
-      #    account.current_account.card << UsualCard.new
-      #  elsif card == 'capitalist'
-      #    account.current_account.card << CapitalistCard.new
-      #  elsif card == 'virtual'
-      #    account.current_account.card << VirtualCard.new
-      #  end
-      #  account.create_card
-      #  break
-      # else
-      #  puts "Wrong card type. Try again!\n"
-      # end
 
-      # break unless account.load(login, password).nil?
-      # puts 'There is no account with given credentials'
     end
   end
 
@@ -177,6 +162,7 @@ class Console
         puts "press `exit` to exit\n"
         answer = gets.chomp
         break if answer == 'exit'
+
         if (1..account.current_account.card.length).include? answer.to_i
           puts "Are you sure you want to delete #{account.current_account.card[answer.to_i - 1].number}?[y/n]"
           answer2 = gets.chomp

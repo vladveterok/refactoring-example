@@ -38,9 +38,6 @@ class Account
     raise WrongCardType if CARD_TYPES[card_type.to_sym].nil?
 
     @current_account.card << CARD_TYPES[card_type.to_sym].new
-
-    # cards = @current_account.card
-    # @current_account.card = cards
     update_account
   end
 
