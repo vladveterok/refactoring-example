@@ -195,12 +195,10 @@ class Console
   end
 
   def show_cards_with_index
-    if !account.current_account.card.empty?
-      account.current_account.card.each_with_index do |card, index|
-        puts "- #{card.number}, #{card.type}, press #{index + 1}"
-      end
-    else
-      puts 'There is no active cards!'
+    return puts 'There is no active cards!' if account.current_account.card.empty?
+
+    account.current_account.card.each_with_index do |card, index|
+      puts "- #{card.number}, #{card.type}, press #{index + 1}"
     end
   end
 
