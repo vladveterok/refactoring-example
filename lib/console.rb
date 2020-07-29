@@ -155,17 +155,9 @@ class Console
       next puts "You entered wrong number!\n" unless (1..account.current_account.card.length).include? answer.to_i
 
       puts "Are you sure you want to delete #{account.current_account.card[answer.to_i - 1].number}?[y/n]"
-      # answer2 = gets.chomp
-      # answer2 == 'y' ? account.destroy_card(answer.to_i) : return
-      gets.chomp == 'y' ? account.destroy_card(answer.to_i) : return
+      account.destroy_card(answer.to_i) if gets.chomp == 'y'
       break
-      # else
-      # puts "You entered wrong number!\n"
-      # end
     end
-    # else
-    #  puts "There is no active cards!\n"
-    # end
   end
 
   def show_cards
