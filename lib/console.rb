@@ -90,7 +90,7 @@ class Console
     when 'WM' then withdraw_money
     when 'SM' then send_money
     when 'DA' then destroy_account
-    else puts "Wrong command. Try again!\n"
+    # else puts "Wrong command. Try again!\n"
     end
   end
 
