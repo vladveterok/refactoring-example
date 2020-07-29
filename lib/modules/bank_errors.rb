@@ -11,4 +11,10 @@ module BankErrors
       'Your tax is higher than input amount'
     end
   end
+
+  class WrongCardType < BankError
+    def message
+      'Wrong card type. Try again!'
+    end
+  end
 end

@@ -144,19 +144,24 @@ class Console
       puts '- For exit - press `exit`'
 
       card = gets.chomp
-      if card == 'usual' || card == 'capitalist' || card == 'virtual'
-        if card == 'usual'
-          account.current_account.card << UsualCard.new
-        elsif card == 'capitalist'
-          account.current_account.card << CapitalistCard.new
-        elsif card == 'virtual'
-          account.current_account.card << VirtualCard.new
-        end
-        account.create_card
-        break
-      else
-        puts "Wrong card type. Try again!\n"
-      end
+
+      # NEW LOGIC:
+      exit if card == 'exit'
+      account.create_card(card)
+      break
+      # if card == 'usual' || card == 'capitalist' || card == 'virtual'
+      #  if card == 'usual'
+      #    account.current_account.card << UsualCard.new
+      #  elsif card == 'capitalist'
+      #    account.current_account.card << CapitalistCard.new
+      #  elsif card == 'virtual'
+      #    account.current_account.card << VirtualCard.new
+      #  end
+      #  account.create_card
+      #  break
+      # else
+      #  puts "Wrong card type. Try again!\n"
+      # end
 
       # break unless account.load(login, password).nil?
       # puts 'There is no account with given credentials'

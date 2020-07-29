@@ -388,7 +388,7 @@ RSpec.describe Console do
         # allow(current_subject).to receive(:accounts).and_return([])
         allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('test', 'usual')
 
-        expect { current_subject.create_card }.to output(/#{ERROR_PHRASES[:wrong_card_type]}/).to_stdout
+        expect { current_subject.create_card }.to raise_error(BankErrors::WrongCardType)
       end
     end
   end

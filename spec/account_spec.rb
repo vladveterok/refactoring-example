@@ -123,16 +123,15 @@ RSpec.describe Account do
       CARDS.each do |card_type, card_instance|
         it "create card with #{card_type} type" do
           # expect(current_subject).to receive_message_chain(:gets, :chomp) { card_instance.type }
-          expect(current_subject).to receive(:card) { card_instance }
+          # expect(current_subject).to receive(:card) { card_instance }
 
-          current_subject.create_card
+          current_subject.create_card(card_type)
 
           expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
           file_accounts = YAML.load_file(OVERRIDABLE_FILENAME)
-          # binding.pry
-          expect(file_accounts.first.card.type).to eq card_instance.type
-          expect(file_accounts.first.card.balance).to eq card_instance.balance
-          expect(file_accounts.first.card.number.length).to be 16
+          expect(file_accounts.first.card.first.type).to eq card_instance.type
+          expect(file_accounts.first.card.first.balance).to eq card_instance.balance
+          expect(file_accounts.first.card.first.number.length).to be 16
         end
       end
     end

@@ -2,10 +2,17 @@ require 'yaml'
 require 'pry'
 
 class Account
+  include BankErrors
   include FileLoader
   include MoneyOperations
 
   attr_accessor :login, :name, :age, :card, :password, :file_path, :current_account
+
+  CARD_TYPES = {
+    usual: UsualCard,
+    capitalist: CapitalistCard,
+    virtual: VirtualCard
+  }.freeze
 
   def initialize
     @file_path = 'accounts.yml'
@@ -19,11 +26,7 @@ class Account
   end
 
   def create
-    # new_accounts = accounts << self
-    # binding.pry
     new_accounts = accounts << @current_account = self
-    # @current_account = self
-    # binding.pry
     save_in_file(new_accounts)
   end
 
@@ -31,9 +34,13 @@ class Account
     @current_account = accounts.find { |a| login == a.login && password == a.password }
   end
 
-  def create_card
-    cards = @current_account.card
-    @current_account.card = cards
+  def create_card(card_type)
+    raise WrongCardType if CARD_TYPES[card_type.to_sym].nil?
+
+    @current_account.card << CARD_TYPES[card_type.to_sym].new
+
+    # cards = @current_account.card
+    # @current_account.card = cards
     update_account
   end
 
