@@ -131,11 +131,9 @@ class Console
   end
 
   def show_cards
-    if !account.current_account.card.empty?
-      account.current_account.card.each { |card| puts "- #{card.number}, #{card.type}" }
-    else
-      puts 'There is no active cards!'
-    end
+    return puts 'There is no active cards!' if account.current_account.card.empty?
+
+    account.current_account.card.each { |card| puts "- #{card.number}, #{card.type}" }
   end
 
   def destroy_account
@@ -183,14 +181,12 @@ class Console
     @errors.push('Password must present') if password == ''
     @errors.push('Password must be longer then 6 symbols') if password.length < 6
     @errors.push('Password must be shorter then 30 symbols') if password.length > 30
-
-    password
   end
 
   def choose_the_card(operation)
     account.current_account.card.any? ? (puts "Choose the card for #{operation}") : (return puts 'There is no active cards!')
     show_cards_with_index
-    puts "press `exit` to exit"
+    puts 'press "exit" to exit'
     gets.chomp
   end
 
