@@ -34,6 +34,7 @@ class Console
       password = gets.chomp
 
       break unless account.load(login, password).nil?
+      
       puts 'There is no account with given credentials'
     end
     main_menu
@@ -41,11 +42,7 @@ class Console
 
   def create_the_first_account
     puts 'There is no active accounts, do you want to be the first?[y/n]'
-    if gets.chomp == 'y'
-      return create
-    else
-      return console
-    end
+    gets.chomp == 'y' ? create : console
   end
 
   def create
