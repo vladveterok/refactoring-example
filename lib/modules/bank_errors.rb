@@ -93,4 +93,10 @@ end
       I18n.t(:wrong_number)
     end
   end
+
+  class WrongAmountError < BankError
+    def message
+      I18n.t(:incorrect_amount)
+    end
+  end
 end

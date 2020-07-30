@@ -26,6 +26,8 @@ en:
   enter_name: 'Enter your name'
   enter_age: 'Enter your age'
 
+  ask_amount: "Input the amount of money you want to %{option}"
+
   no_such_account: 'There is no account with given credentials'
   create_first_account: 'There is no active accounts, do you want to be the first?[y/n]'
 
@@ -58,5 +60,6 @@ en:
   tax_too_high: 'Your tax is higher than input amount'
   wrong_card_type: 'Wrong card type. Try again!'
   no_active_card: "There is no active cards!"
+  incorrect_amount: 'You must input correct amount of $'
 
   no_such_card: "There is no card with number %{card}"
