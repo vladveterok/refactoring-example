@@ -39,6 +39,12 @@ en:
 
   choose_card: "Choose the card for %{action}"
 
+  enter_recipient: 'Enter the recipient card:'
+
+  money_withdrawn: "Money %{amount} withdrawed from %{card}$. Money left: %{balance}$. Tax: %{tax}$"
+  money_put: "Money %{amount} was put on %{card}. Balance: %{balance}. Tax: %{tax}"
+  money_sent: "Money %{amount}$ was put on %{card}. Balance: %{balance}. Tax: %{tax}$"
+
   show_card: "– %{num}, %{type}, press %{index}"
 
   sure_to_delete_card: "Are you sure you want to delete %{card}?[y/n]"
