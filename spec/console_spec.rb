@@ -146,7 +146,7 @@ RSpec.describe Console do
       before do
         allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*success_inputs)
         allow(current_subject).to receive(:main_menu)
-        allow(current_subject).to receive(:accounts).and_return([]) # FOR ACCOUNT???????
+        allow(current_subject).to receive(:accounts).and_return([])
       end
 
       after do
