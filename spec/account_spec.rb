@@ -1,5 +1,5 @@
 RSpec.describe Account do
-  OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'.freeze
+  let(:OVERRIDABLE_FILENAME) { 'spec/fixtures/account.yml' }
 
   CARDS = {
     usual: UsualCard.new,
