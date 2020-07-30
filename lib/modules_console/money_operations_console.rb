@@ -3,15 +3,15 @@ module MoneyOperationsConsole
   def withdraw_money
     answer_card = choose_the_card('withdrawing:')
     return if answer_card == 'exit'
-    return puts 'You entered wrong number!' unless (1..account.current_account.card.length).include? answer_card.to_i
+    return puts 'You entered wrong number!' unless (1..@current_account.card.length).include? answer_card.to_i
 
-    current_card = account.current_account.card[answer_card.to_i - 1]
+    current_card = @current_account.card[answer_card.to_i - 1]
 
     puts 'Input the amount of money you want to withdraw'
     answer_amount = gets.chomp
     return puts 'You must input correct amount of $' unless answer_amount.to_i.positive?
 
-    account.current_account.withdraw_money(current_card, answer_amount.to_i)
+    @current_account.withdraw_money(current_card, answer_amount.to_i)
     puts "Money #{answer_amount.to_i} withdrawed from #{current_card.number}$. Money left: #{current_card.balance}$. Tax: #{current_card.withdraw_tax(answer_amount.to_i)}$"
   end
 
@@ -19,15 +19,15 @@ module MoneyOperationsConsole
   def put_money
     answer_card = choose_the_card('putting:')
     return if answer_card == 'exit'
-    return puts 'You entered wrong number!' unless (1..account.current_account.card.length).include? answer_card.to_i
+    return puts 'You entered wrong number!' unless (1..@current_account.card.length).include? answer_card.to_i
 
-    current_card = account.current_account.card[answer_card.to_i - 1]
+    current_card = @current_account.card[answer_card.to_i - 1]
 
     puts 'Input the amount of money you want to put on your card'
     answer_amount = gets.chomp
     return puts 'You must input correct amount of money' unless answer_amount.to_i.positive?
 
-    account.current_account.put_money(current_card, answer_amount.to_i)
+    @current_account.put_money(current_card, answer_amount.to_i)
     puts "Money #{answer_amount&.to_i.to_i} was put on #{current_card.number}. Balance: #{current_card.balance}. Tax: #{current_card.put_tax(answer_amount.to_i)}"
   end
 

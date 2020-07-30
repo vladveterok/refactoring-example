@@ -2,7 +2,7 @@ class Console
   include BankErrors
   include MoneyOperationsConsole
 
-  attr_reader :current_account
+  attr_accessor :current_account
 
   def initialize
     @errors = []
@@ -36,6 +36,7 @@ class Console
     password = gets.chomp
 
     account.load(login, password)
+    @current_account = account.current_account
     main_menu
     # return main_menu unless account.load(login, password).nil?
     # puts I18n.t(:no_such_account)
@@ -65,7 +66,7 @@ class Console
 
   def main_menu
     loop do
-      puts I18n.t(:menu, name: account.current_account.name)
+      puts I18n.t(:menu, name: @current_account.name)
 
       command = gets.chomp
       break if command == 'exit'
@@ -95,9 +96,9 @@ class Console
 
   def show_cards
     # return puts I18n.t(:no_active_card) if account.current_account.card.empty?
-    raise NoActiveCard if account.current_account.card.empty?
+    raise NoActiveCard if @current_account.card.empty?
 
-    account.current_account.card.each { |card| puts "- #{card.number}, #{card.type}" }
+    @current_account.card.each { |card| puts "- #{card.number}, #{card.type}" }
   end
 
   def create_card
@@ -113,7 +114,7 @@ class Console
   end
 
   def destroy_card
-    return puts I18n.t(:no_active_card) unless account.current_account.card.any?
+    return puts I18n.t(:no_active_card) unless @current_account.card.any?
 
     loop do
       puts I18n.t(:if_want_delete)
@@ -123,9 +124,9 @@ class Console
       break if (answer = gets.chomp) == 'exit'
       # answer = gets.chomp
       # break if answer == 'exit'
-      next puts I18n.t(:wrong_number) unless (1..account.current_account.card.length).include? answer.to_i
+      next puts I18n.t(:wrong_number) unless (1..@current_account.card.length).include? answer.to_i
 
-      puts I18n.t(:sure_to_delete_card, card: account.current_account.card[answer.to_i - 1].number)
+      puts I18n.t(:sure_to_delete_card, card: @current_account.card[answer.to_i - 1].number)
       account.destroy_card(answer.to_i) if gets.chomp == 'y'
       break
     end
@@ -193,16 +194,17 @@ class Console
   end
 
   def choose_the_card(operation)
-    account.current_account.card.any? ? (puts I18n.t(:choose_card, action: operation)) : (return puts I18n.t(:no_active_card))
+    @current_account.card.any? ? (puts I18n.t(:choose_card, action: operation)) : (raise NoActiveCard) # (return puts I18n.t(:no_active_card))
     show_cards_with_index
+
     puts I18n.t(:press_exit)
     gets.chomp
   end
 
   def show_cards_with_index
-    return puts I18n.t(:no_active_card) if account.current_account.card.empty?
+    return puts I18n.t(:no_active_card) if @current_account.card.empty?
 
-    account.current_account.card.each_with_index do |card, index|
+    @current_account.card.each_with_index do |card, index|
       puts I18n.t(:show_card, num: card.number, type: card.type, index: index + 1)
     end
   end
