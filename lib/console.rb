@@ -11,10 +11,7 @@ class Console
   end
 
   def console
-    puts 'Hello, we are RubyG bank!'
-    puts '- If you want to create account - press `create`'
-    puts '- If you want to load account - press `load`'
-    puts '- If you want to exit - press `exit`'
+    puts I18n.t(:console)
 
     case gets.chomp
     when 'create' then create
@@ -26,19 +23,19 @@ class Console
   def load
     return create_the_first_account unless accounts.any?
 
-    puts 'Enter your login'
+    puts I18n.t(:enter_login)
     login = gets.chomp
-    puts 'Enter your password'
+    puts I18n.t(:enter_password)
     password = gets.chomp
 
     return main_menu unless account.load(login, password).nil?
 
-    puts 'There is no account with given credentials'
+    puts I18n.t(:no_such_account)
     console
   end
 
   def create_the_first_account
-    puts 'There is no active accounts, do you want to be the first?[y/n]'
+    puts I18n.t(:create_first_account)
     gets.chomp == 'y' ? create : console
   end
 
@@ -58,16 +55,7 @@ class Console
 
   def main_menu
     loop do
-      puts "\nWelcome, #{account.current_account.name}" # #{account.current_account.name}
-      puts 'If you want to:'
-      puts '- show all cards - press SC'
-      puts '- create card - press CC'
-      puts '- destroy card - press DC'
-      puts '- put money on card - press PM'
-      puts '- withdraw money on card - press WM'
-      puts '- send money to another card  - press SM'
-      puts '- destroy account - press `DA`'
-      puts '- exit from account - press `exit`'
+      puts I18n.t(:menu, name: account.current_account.name)
 
       command = gets.chomp
       break if command == 'exit'
@@ -90,17 +78,13 @@ class Console
     when 'WM' then withdraw_money
     when 'SM' then send_money
     when 'DA' then destroy_account
-    # else puts "Wrong command. Try again!\n"
+    else puts I18n.t(:wrong_command)
     end
   end
 
   def create_card
     loop do
-      puts 'You could create one of 3 card types'
-      puts '- Usual card. 2% tax on card INCOME. 20$ tax on SENDING money from this card. 5% tax on WITHDRAWING money. For creation this card - press `usual`'
-      puts '- Capitalist card. 10$ tax on card INCOME. 10% tax on SENDING money from this card. 4$ tax on WITHDRAWING money. For creation this card - press `capitalist`'
-      puts '- Virtual card. 1$ tax on card INCOME. 1$ tax on SENDING money from this card. 12% tax on WITHDRAWING money. For creation this card - press `virtual`'
-      puts '- For exit - press `exit`'
+      puts I18n.t(:create_card)
 
       card = gets.chomp
 
@@ -113,31 +97,31 @@ class Console
   end
 
   def destroy_card
-    return puts "There is no active cards!\n" unless account.current_account.card.any?
+    return puts I18n.t(:no_active_card) unless account.current_account.card.any?
 
     loop do
-      puts 'If you want to delete:'
+      puts I18n.t(:if_want_delete)
       show_cards_with_index
-      puts "press `exit` to exit\n"
+      puts I18n.t(:press_exit)
 
       answer = gets.chomp
       break if answer == 'exit'
-      next puts "You entered wrong number!\n" unless (1..account.current_account.card.length).include? answer.to_i
+      next puts I18n.t(:wrong_number) unless (1..account.current_account.card.length).include? answer.to_i
 
-      puts "Are you sure you want to delete #{account.current_account.card[answer.to_i - 1].number}?[y/n]"
+      puts I18n.t(:sure_to_delete_card, card: account.current_account.card[answer.to_i - 1].number)
       account.destroy_card(answer.to_i) if gets.chomp == 'y'
       break
     end
   end
 
   def show_cards
-    return puts 'There is no active cards!' if account.current_account.card.empty?
+    return puts I18n.t(:no_active_card) if account.current_account.card.empty?
 
     account.current_account.card.each { |card| puts "- #{card.number}, #{card.type}" }
   end
 
   def destroy_account
-    puts 'Are you sure you want to destroy account?[y/n]'
+    puts I18n.t(:sure_to_destroy_acc)
     a = gets.chomp
     account.destroy_account if a == 'y'
   end
@@ -145,56 +129,58 @@ class Console
   private
 
   def name_input
-    puts 'Enter your name'
+    puts I18n.t(:enter_name)
     name = gets.chomp # .capitalize
     return name if name != '' && name.capitalize == name
 
-    @errors.push('Your name must not be empty and starts with first upcase letter')
+    @errors.push(I18n.t(:name_must_be))
   end
 
   def age_input
-    puts 'Enter your age'
+    puts I18n.t(:enter_age)
     age = gets.chomp
     return age.to_i if age.to_i.is_a?(Integer) && age.to_i >= 23 && age.to_i <= 90
 
-    @errors.push('Your Age must be greeter then 23 and lower then 90')
+    @errors.push(I18n.t(:age_must_be))
   end
 
   def login_input
-    puts 'Enter your login'
+    puts I18n.t(:enter_login)
     login = gets.chomp
 
-    @errors.push('Login must present') if login == ''
-    @errors.push('Login must be longer then 4 symbols') if login.length < 4
-    @errors.push('Login must be shorter then 20 symbols') if login.length > 20
+    @errors.push(I18n.t(:login_must_be)) if login == ''
+    @errors.push(I18n.t(:login_must_longer)) if login.length < 4
+    @errors.push(I18n.t(:login_must_shorter)) if login.length > 20
 
     return login unless account.accounts.map(&:login).include? login
 
-    @errors.push('Such account is already exists')
+    @errors.push(I18n.t(:account_exists))
   end
 
   #### MOVE errors into app?
   def password_input
-    puts 'Enter your password'
+    puts I18n.t(:enter_password)
     password = gets.chomp
 
-    @errors.push('Password must present') if password == ''
-    @errors.push('Password must be longer then 6 symbols') if password.length < 6
-    @errors.push('Password must be shorter then 30 symbols') if password.length > 30
+    @errors.push(I18n.t(:password_must_be)) if password == ''
+    @errors.push(I18n.t(:password_must_longer)) if password.length < 6
+    @errors.push(I18n.t(:password_must_shorter)) if password.length > 30
+
+    password
   end
 
   def choose_the_card(operation)
-    account.current_account.card.any? ? (puts "Choose the card for #{operation}") : (return puts 'There is no active cards!')
+    account.current_account.card.any? ? (puts I18n.t(:choose_card, action: operation)) : (return puts I18n.t(:no_active_card))
     show_cards_with_index
-    puts 'press "exit" to exit'
+    puts I18n.t(:press_exit)
     gets.chomp
   end
 
   def show_cards_with_index
-    return puts 'There is no active cards!' if account.current_account.card.empty?
+    return puts I18n.t(:no_active_card) if account.current_account.card.empty?
 
     account.current_account.card.each_with_index do |card, index|
-      puts "- #{card.number}, #{card.type}, press #{index + 1}"
+      puts I18n.t(:show_card, num: card.number, type: card.type, index: index + 1)
     end
   end
 

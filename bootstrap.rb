@@ -1,3 +1,7 @@
+require 'i18n'
+
+require_relative 'config/application'
+
 require_relative 'lib/modules_console/money_operations_console'
 require_relative 'lib/console'
 
