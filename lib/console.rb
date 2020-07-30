@@ -162,7 +162,7 @@ class Console
     @errors.push(I18n.t(:login_must_longer)) if login.length < 4
     @errors.push(I18n.t(:login_must_shorter)) if login.length > 20
 
-    login_exists? ? @errors.push(I18n.t(:account_exists)) : login # account.accounts.map(&:login).include? login
+    login_exists?(login) ? @errors.push(I18n.t(:account_exists)) : login # account.accounts.map(&:login).include? login
   end
 
   def login_exists?(login)
@@ -205,6 +205,14 @@ class Console
 
   def accounts
     account.accounts
+  end
+
+  def current_card(number)
+    @current_account.card[number]
+  end
+
+  def current_account_cards
+    @current_account.card
   end
 
   def return_errors
