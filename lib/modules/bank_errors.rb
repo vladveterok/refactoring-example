@@ -88,9 +88,9 @@ end
     end
   end
 
-  # class WrongNUmberError < BankError
-  #  def message
-  #    I18n.t(:wrong_number)
-  #  end
-  # end
+  class WrongNumberError < BankError
+    def message
+      I18n.t(:wrong_number)
+    end
+  end
 end

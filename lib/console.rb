@@ -202,7 +202,7 @@ class Console
   end
 
   def show_cards_with_index
-    return puts I18n.t(:no_active_card) if @current_account.card.empty?
+    raise NoActiveCard if @current_account.card.empty?
 
     @current_account.card.each_with_index do |card, index|
       puts I18n.t(:show_card, num: card.number, type: card.type, index: index + 1)
