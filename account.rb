@@ -32,6 +32,8 @@ class Account
 
   def load(login, password)
     @current_account = accounts.find { |a| login == a.login && password == a.password }
+
+    raise NoAccountError if @current_account.nil?
   end
 
   def create_card(card_type)

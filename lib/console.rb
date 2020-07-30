@@ -1,8 +1,12 @@
 class Console
+  include BankErrors
   include MoneyOperationsConsole
+
+  attr_reader :current_account
 
   def initialize
     @errors = []
+    @current_account = nil
     account
   end
 
@@ -18,6 +22,9 @@ class Console
     when 'load' then load
     else exit
     end
+  rescue BankErrors::BankError => e
+    puts e.message
+    retry
   end
 
   def load
@@ -28,10 +35,11 @@ class Console
     puts I18n.t(:enter_password)
     password = gets.chomp
 
-    return main_menu unless account.load(login, password).nil?
-
-    puts I18n.t(:no_such_account)
-    console
+    account.load(login, password)
+    main_menu
+    # return main_menu unless account.load(login, password).nil?
+    # puts I18n.t(:no_such_account)
+    # console
   end
 
   def create_the_first_account
@@ -40,16 +48,18 @@ class Console
   end
 
   def create
-    loop do
-      account.name = name_input
-      account.age = age_input
-      account.login = login_input
-      account.password = password_input
-      break if @errors.empty?
+    ask_credentials
+    # loop do
+    #  account.name = name_input
+    #  account.age = age_input
+    #  account.login = login_input
+    #  account.password = password_input
+    #  break if @errors.empty?
 
-      return_errors
-    end
+    #  return_errors
+    # end
     account.create
+    @current_account = account.current_account
     main_menu
   end
 
@@ -78,21 +88,27 @@ class Console
     when 'WM' then withdraw_money
     when 'SM' then send_money
     when 'DA' then destroy_account
-    else puts I18n.t(:wrong_command)
+    # else puts I18n.t(:wrong_command)
+    else raise CommandError
     end
+  end
+
+  def show_cards
+    # return puts I18n.t(:no_active_card) if account.current_account.card.empty?
+    raise NoActiveCard if account.current_account.card.empty?
+
+    account.current_account.card.each { |card| puts "- #{card.number}, #{card.type}" }
   end
 
   def create_card
     loop do
       puts I18n.t(:create_card)
-
       card = gets.chomp
 
       # NEW LOGIC:
       exit if card == 'exit'
       account.create_card(card)
       break
-
     end
   end
 
@@ -104,20 +120,15 @@ class Console
       show_cards_with_index
       puts I18n.t(:press_exit)
 
-      answer = gets.chomp
-      break if answer == 'exit'
+      break if (answer = gets.chomp) == 'exit'
+      # answer = gets.chomp
+      # break if answer == 'exit'
       next puts I18n.t(:wrong_number) unless (1..account.current_account.card.length).include? answer.to_i
 
       puts I18n.t(:sure_to_delete_card, card: account.current_account.card[answer.to_i - 1].number)
       account.destroy_card(answer.to_i) if gets.chomp == 'y'
       break
     end
-  end
-
-  def show_cards
-    return puts I18n.t(:no_active_card) if account.current_account.card.empty?
-
-    account.current_account.card.each { |card| puts "- #{card.number}, #{card.type}" }
   end
 
   def destroy_account
@@ -127,6 +138,18 @@ class Console
   end
 
   private
+
+  def ask_credentials
+    loop do
+      account.name = name_input
+      account.age = age_input
+      account.login = login_input
+      account.password = password_input
+      break if @errors.empty?
+
+      return_errors
+    end
+  end
 
   def name_input
     puts I18n.t(:enter_name)

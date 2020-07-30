@@ -126,7 +126,8 @@ RSpec.describe Console do
       it do
         allow(current_subject).to receive_message_chain(:gets, :chomp) { 'test' }
         allow(current_subject).to receive(:exit)
-        HELLO_PHRASES.each { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
+        # HELLO_PHRASES.each { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
+        expect(current_subject).to receive(:puts).with(I18n.t(:console))
         current_subject.console
       end
     end
@@ -307,7 +308,8 @@ RSpec.describe Console do
         it do
           # expect(current_subject).to receive(:main_menu)
           expect(current_subject).to receive(:console)
-          expect { current_subject.load }.to output(/#{ERROR_PHRASES[:user_not_exists]}/).to_stdout
+          # expect { current_subject.load }.to output(/#{ERROR_PHRASES[:user_not_exists]}/).to_stdout
+          expect { current_subject.load }.to raise_error(BankErrors::NoAccountError)
         end
       end
     end
@@ -370,8 +372,9 @@ RSpec.describe Console do
   describe '#create_card' do
     context 'with correct output' do
       it do
-        CREATE_CARD_PHRASES.each { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
+        # CREATE_CARD_PHRASES.each { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
         # current_subject.instance_variable_set(:@card, [])
+        expect(current_subject).to receive(:puts).with(I18n.t(:create_card))
         current_subject.account.instance_variable_set(:@current_account, current_subject.account)
         # allow(current_subject).to receive(:accounts).and_return([])
         # allow(File).to receive(:open)
@@ -406,8 +409,9 @@ RSpec.describe Console do
 
     it 'outputs error if there are no active cards' do
       current_subject.account.instance_variable_set(:@current_account, instance_double('Account', card: []))
-      expect(current_subject).to receive(:puts).with(ERROR_PHRASES[:no_active_cards])
-      current_subject.show_cards
+      # expect(current_subject).to receive(:puts).with(ERROR_PHRASES[:no_active_cards])
+      expect { current_subject.show_cards }.to raise_error(BankErrors::NoActiveCard)
+      # current_subject.show_cards
     end
   end
 
@@ -431,8 +435,10 @@ RSpec.describe Console do
           current_subject.account.instance_variable_set(:@current_account, current_subject.account)
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
           expect { current_subject.destroy_card }.to output(/#{COMMON_PHRASES[:if_you_want_to_delete]}/).to_stdout
+          # expect(current_subject).to receive(:puts).with(I18n.t(:if_want_delete))
           fake_cards.each_with_index do |card, i|
-            message = /- #{card.number}, #{card.type}, press #{i + 1}/
+            message = I18n.t(:show_card, num: card.number, type: card.type, index: i + 1)
+            # message = /- #{card.number}, #{card.type}, press #{i + 1}/
             expect { current_subject.destroy_card }.to output(message).to_stdout
           end
           current_subject.destroy_card
