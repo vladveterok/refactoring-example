@@ -130,10 +130,6 @@ class Console
   end
 
   def return_errors
-    @errors.each do |e|
-      puts e.message
-      # raise e # , e.message
-    end
-    @errors = []
+    @errors.select! { |error| puts error.message }
   end
 end
