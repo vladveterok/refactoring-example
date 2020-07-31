@@ -2,6 +2,8 @@ class Console
   include BankErrors
   include Console::MoneyOperationsConsole
 
+  attr_reader :errors
+
   def initialize
     @errors = []
     account
@@ -130,6 +132,8 @@ class Console
   end
 
   def return_errors
+    # @errors.select! { |error| puts error.message }
+    @errors = account.errors
     @errors.select! { |error| puts error.message }
   end
 end

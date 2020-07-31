@@ -6,7 +6,8 @@ class Account
   include FileLoader
   include MoneyOperations
 
-  attr_accessor :login, :name, :age, :card, :password, :file_path, :current_account
+  attr_accessor :login, :age, :card, :password, :file_path, :current_account #:name
+  attr_reader :name, :errors
 
   CARD_TYPES = {
     usual: UsualCard,
@@ -15,6 +16,7 @@ class Account
   }.freeze
 
   def initialize
+    @errors = []
     @file_path = 'accounts.yml'
 
     @name = nil
@@ -25,7 +27,38 @@ class Account
     @current_account = nil
   end
 
+  def name!(name)
+    return @errors.push(NoNameError.new) unless name != '' && name.capitalize == name
+
+    @name = name
+  end
+
+  def age!(age)
+    return @errors.push(AgeError.new) unless age.is_a?(Integer) && age.to_i >= 23 && age.to_i <= 90
+
+    @age = age
+  end
+
+  def login!(login)
+    @errors.push(NoLoginError.new) if login == ''
+    @errors.push(ShortLoginError.new) if login.length < 4
+    @errors.push(LongLoginError.new) if login.length > 20
+    @errors.push(AccountExists.new) if login_exists?(login)
+
+    @login = login
+  end
+
+  def password!(password)
+    @errors.push(NoPasswordError.new) if password == ''
+    @errors.push(ShortPasswordError.new) if password.length < 6
+    @errors.push(LongPasswordError.new) if password.length > 30
+
+    @password = password
+  end
+
   def create
+    # return_errors unless @errors.empty?
+
     new_accounts = accounts << @current_account = self
     save_in_file(new_accounts)
   end
@@ -65,6 +98,10 @@ class Account
   def login_exists?(login)
     accounts.map(&:login).include? login
   end
+
+  # def return_errors
+  #  @errors.select! { |error| raise error }
+  # end
 
   private
 

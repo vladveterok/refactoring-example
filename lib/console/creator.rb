@@ -16,64 +16,73 @@ class Creator < Console
 
   def ask_credentials
     loop do
-      account.name = name_input
-      account.age = age_input
-      account.login = login_input
-      account.password = password_input
-      break if @errors.empty?
+      account.name!(name_input)
+      # account.name = name_input
+      account.age!(age_input)
+      # account.age = age_input
+      account.login!(login_input)
+      # account.login = login_input
+      account.password!(password_input)
+      # account.password = password_input
+      break if account.errors.empty?
 
       return_errors
-    rescue BankErrors::BankError
-      retry
     end
   end
 
   def name_input
     puts I18n.t(:enter_name)
+    # gets.chomp
     name = gets.chomp
-    return name if name != '' && name.capitalize == name
+    name
+    # return name if name != '' && name.capitalize == name
 
     # @errors.push(I18n.t(:name_must_be))
-    @errors.push(NoNameError.new)
+    # @errors.push(NoNameError.new)
   end
 
   def age_input
     puts I18n.t(:enter_age)
-    age = gets.chomp
-    return age.to_i if age.to_i.is_a?(Integer) && age.to_i >= 23 && age.to_i <= 90
+    gets.chomp.to_i
+
+    #return age.to_i if age.to_i.is_a?(Integer) && age.to_i >= 23 && age.to_i <= 90
 
     # @errors.push(I18n.t(:age_must_be))
-    @errors.push(AgeError.new)
+    # @errors.push(AgeError.new)
   end
 
   def login_input
     puts I18n.t(:enter_login)
-    login = gets.chomp
+    gets.chomp
+
+    # login = gets.chomp
 
     # @errors.push(I18n.t(:login_must_be)) if login == ''
     # @errors.push(I18n.t(:login_must_longer)) if login.length < 4
     # @errors.push(I18n.t(:login_must_shorter)) if login.length > 20
 
-    @errors.push(NoLoginError.new) if login == ''
-    @errors.push(ShortLoginError.new) if login.length < 4
-    @errors.push(LongLoginError.new) if login.length > 20
-
     # account.login_exists?(login) ? @errors.push(I18n.t(:account_exists)) : login
-    account.login_exists?(login) ? @errors.push(AccountExists.new) : login
+
+    # @errors.push(NoLoginError.new) if login == ''
+    # @errors.push(ShortLoginError.new) if login.length < 4
+    # @errors.push(LongLoginError.new) if login.length > 20
+
+    # account.login_exists?(login) ? @errors.push(AccountExists.new) : login
   end
 
   def password_input
     puts I18n.t(:enter_password)
-    password = gets.chomp
+    gets.chomp
+    #password = gets.chomp
 
     # @errors.push(I18n.t(:password_must_be)) if password == ''
     # @errors.push(I18n.t(:password_must_longer)) if password.length < 6
     # @errors.push(I18n.t(:password_must_shorter)) if password.length > 30
 
-    @errors.push(NoPasswordError.new) if password == ''
-    @errors.push(ShortPasswordError.new) if password.length < 6
-    @errors.push(LongPasswordError.new) if password.length > 30
+    # @errors.push(NoPasswordError.new) if password == ''
+    # @errors.push(ShortPasswordError.new) if password.length < 6
+    # @errors.push(LongPasswordError.new) if password.length > 30
 
-    password
+    # password
   end
 end
