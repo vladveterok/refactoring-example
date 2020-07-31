@@ -50,9 +50,9 @@ class Console
   end
 
   #### SPLIT LOGIC
-  # def create_the_first_account
-  #   raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
-  # end
+  def create_the_first_account
+    Creator.new.create_the_first_account
+  end
 
   def current_account
     @current_account ||= account.current_account
