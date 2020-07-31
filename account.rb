@@ -59,8 +59,11 @@ class Account
   end
 
   def accounts
-    # binding.pry
     File.exist?('accounts.yml') ? YAML.load_file('accounts.yml') : []
+  end
+
+  def login_exists?(login)
+    accounts.map(&:login).include? login
   end
 
   private

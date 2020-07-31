@@ -31,6 +31,12 @@ module BankErrors
     end
   end
 
+  class AccountExists < BankError
+    def message
+      I18n.t(:account_exists)
+    end
+  end
+
   class NoNameError < BankError
     def message
       I18n.t(:name_must_be)

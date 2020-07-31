@@ -1,23 +1,9 @@
 class Console
   include BankErrors
-  # include Console::CardPicker
   include Console::MoneyOperationsConsole
-=begin
-  MENU_COMMANDS = {
-    SC: :show_cards,
-    CC: :create_card,
-    DC: :destroy_card,
-    PM: :put_money,
-    WM: :withdraw_money,
-    SM: :send_money,
-    DA: :destroy_account
-  }.freeze
-=end
 
   def initialize
     @errors = []
-    # @current_account = nil
-    # @card_handler = CardHandler.new
     account
   end
 
@@ -64,31 +50,7 @@ class Console
     @main_menu.main_menu
   end
 
-=begin
-  def main_menu
-    loop do
-      puts I18n.t(:menu, name: @current_account.name)
-
-      command = gets.chomp
-      break if command == 'exit'
-
-      commands(command)
-      # puts "Wrong command. Try again!\n" if commands(gets.chomp).nil? # (gets.chomp)
-    end
-  rescue BankErrors::BankError => e
-    puts e.message
-    retry
-  end
-
-  def commands(command)
-    raise CommandError if MENU_COMMANDS[command.to_sym].nil?
-
-    method(MENU_COMMANDS[command.to_sym]).call
-  end
-=end
-
   def show_cards
-    # return puts I18n.t(:no_active_card) if account.current_account.card.empty?
     raise NoActiveCard if @current_account.card.empty?
 
     @current_account.card.each { |card| puts "- #{card.number}, #{card.type}" }
@@ -100,16 +62,12 @@ class Console
       card = gets.chomp
 
       exit if card == 'exit'
-      # account.create_card(card)
-      # binding.pry
       current_account.create_card(card)
       break
     end
   end
 
   def destroy_card
-    raise NoActiveCard unless current_account_cards.any?
-
     loop do
       puts I18n.t(:if_want_delete)
       show_cards_with_index
@@ -133,7 +91,6 @@ class Console
   private
 
   def choose_the_card(operation)
-    # @current_account.card.any? ? (puts I18n.t(:choose_card, action: operation)) : (raise NoActiveCard)
     puts I18n.t(:choose_card, action: operation)
     show_cards_with_index
 
@@ -160,13 +117,13 @@ class Console
     @current_account.card
   end
 
-  def card_exists?(answer_card)
-    (1..@current_account.card.length).include? answer_card.to_i
+  def card_exists?(card_number)
+    (1..@current_account.card.length).include? card_number.to_i
   end
 
-  def login_exists?(login)
-    account.accounts.map(&:login).include? login
-  end
+  # def login_exists?(login)
+  #  account.accounts.map(&:login).include? login
+  # end
 
   def accounts
     account.accounts
@@ -174,7 +131,8 @@ class Console
 
   def return_errors
     @errors.each do |e|
-      puts e
+      puts e.message
+      # raise e # , e.message
     end
     @errors = []
   end

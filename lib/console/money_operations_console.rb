@@ -6,7 +6,7 @@ class Console
       answer_card = choose_the_card('withdrawing:')
       return if answer_card == 'exit'
 
-      card = current_card(answer_card.to_i - 1)
+      card = current_card(answer_card)
       amount = ask_money_amount('withdraw')
 
       @current_account.withdraw_money(card, amount.to_i)
@@ -18,7 +18,7 @@ class Console
       answer_card = choose_the_card('putting:')
       return if answer_card == 'exit'
 
-      card = current_card(answer_card.to_i - 1)
+      card = current_card(answer_card)
       amount = ask_money_amount('put on your card')
 
       @current_account.put_money(card, amount.to_i)
@@ -30,7 +30,7 @@ class Console
       answer_sender_card = choose_the_card('putting:')
       return if answer_sender_card == 'exit'
 
-      card = current_card(answer_sender_card.to_i - 1)
+      card = current_card(answer_sender_card)
       recipient_card = ask_recipient_card
 
       amount = ask_money_amount('withdraw')
