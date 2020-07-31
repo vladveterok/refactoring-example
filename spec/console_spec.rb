@@ -336,6 +336,7 @@ RSpec.describe Console do
     end
   end
 =end
+=begin
   describe '#main_menu' do
     let(:name) { 'John' }
     let(:commands) do
@@ -366,14 +367,20 @@ RSpec.describe Console do
       end
     end
   end
+=end
 
   describe '#create_card' do
     context 'with correct output' do
+      # before do 
+        
+      #   current_subject.main_menu
+      # end
+
       it do
         # CREATE_CARD_PHRASES.each { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
         # current_subject.instance_variable_set(:@card, [])
-        expect(current_subject).to receive(:puts).with(I18n.t(:create_card))
         current_subject.account.instance_variable_set(:@current_account, current_subject.account)
+        expect(current_subject).to receive(:puts).with(I18n.t(:create_card))
         # allow(current_subject).to receive(:accounts).and_return([])
         # allow(File).to receive(:open)
         expect(current_subject).to receive_message_chain(:gets, :chomp) { 'usual' }
