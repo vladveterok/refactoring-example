@@ -9,7 +9,8 @@ module MoneyOperationsConsole
     amount = ask_money_amount('withdraw')
 
     @current_account.withdraw_money(card, amount.to_i)
-    puts I18n.t(:money_withdrawn, amount: amount, card: card.number, balance: card.balance, tax: card.withdraw_tax(amount.to_i))
+    puts I18n.t(:money_withdrawn, amount: amount, card: card.number,
+                                  balance: card.balance, tax: card.withdraw_tax(amount.to_i))
   end
 
   def put_money
@@ -20,7 +21,8 @@ module MoneyOperationsConsole
     amount = ask_money_amount('put on your card')
 
     @current_account.put_money(card, amount.to_i)
-    puts I18n.t(:money_put, amount: amount, card: card.number, balance: card.balance, tax: card.withdraw_tax(amount.to_i))
+    puts I18n.t(:money_put, amount: amount, card: card.number,
+                            balance: card.balance, tax: card.withdraw_tax(amount.to_i))
   end
 
   def send_money
@@ -33,7 +35,8 @@ module MoneyOperationsConsole
     amount = ask_money_amount('withdraw')
 
     @current_account.send_money(card, recipient_card, amount.to_i)
-    puts I18n.t(:money_sent, amount: amount, card: recipient_card.number, balance: card.balance, tax: card.withdraw_tax(amount.to_i))
+    puts I18n.t(:money_sent, amount: amount, card: recipient_card.number,
+                             balance: card.balance, tax: card.withdraw_tax(amount.to_i))
   end
 
   def ask_money_amount(option)

@@ -1,6 +1,5 @@
 module BankErrors
   class BankError < StandardError; end
-  # class ConsoleError < StandardError; end
 
   class NoMoneyError < BankError
     def message
@@ -26,25 +25,25 @@ module BankErrors
     end
   end
 
-class NoAccountError < BankError
-  def message
-    I18n.t(:no_such_account)
+  class NoAccountError < BankError
+    def message
+      I18n.t(:no_such_account)
+    end
   end
-end
 
-  class NoNameError < BankError # ConsoleError
+  class NoNameError < BankError
     def message
       I18n.t(:name_must_be)
     end
   end
 
-  class AgeError < BankError # ConsoleError
+  class AgeError < BankError
     def message
       I18n.t(:age_must_be)
     end
   end
 
-  class LoginError < BankError; end # ConsoleError; end
+  class LoginError < BankError; end
   class NoLoginError < LoginError
     def message
       I18n.t(:login_must_be)
@@ -63,7 +62,7 @@ end
     end
   end
 
-  class PasswordError < BankError;end # ConsoleError; end
+  class PasswordError < BankError; end
   class NoPasswordError < PasswordError
     def message
       I18n.t(:password_must_be)

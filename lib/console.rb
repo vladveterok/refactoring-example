@@ -2,12 +2,13 @@ class Console
   include BankErrors
   include MoneyOperationsConsole
 
-  attr_accessor :current_account
+  # attr_accessor :current_account
 
   def initialize
     @errors = []
     @current_account = nil
     account
+    # menu_commands
   end
 
   def account
@@ -22,6 +23,7 @@ class Console
     when 'load' then load
     else exit
     end
+    # main_menu
   rescue BankErrors::BankError => e
     puts e.message
     retry
@@ -36,8 +38,12 @@ class Console
     password = gets.chomp
 
     account.load(login, password)
-    @current_account = account.current_account
+    current_account
     main_menu
+  end
+
+  def current_account
+    @current_account ||= account.current_account
   end
 
   def create_the_first_account
@@ -67,8 +73,20 @@ class Console
     puts e.message
     retry
   end
-
+=begin
+  menu_commands = {
+    SC: show_cards,
+    CC: create_card,
+    DC: destroy_card,
+    PM: put_money,
+    WM: withdraw_money,
+    SM: send_money,
+    DA: destroy_card
+  }.freeze
+=end
   def commands(command)
+    raise CommandError if menu_commands[command.to_sym].nil?
+
     case command
     when 'SC' then show_cards
     when 'CC' then create_card
@@ -94,7 +112,6 @@ class Console
       puts I18n.t(:create_card)
       card = gets.chomp
 
-      # NEW LOGIC:
       exit if card == 'exit'
       account.create_card(card)
       break
@@ -110,9 +127,9 @@ class Console
       puts I18n.t(:press_exit)
 
       break if (answer = gets.chomp) == 'exit'
-      next puts I18n.t(:wrong_number) unless (1..current_account_cards.length).include? answer.to_i
+      next puts I18n.t(:wrong_number) unless card_exists?(answer)
 
-      puts I18n.t(:sure_to_delete_card, card: current_card(answer.to_i - 1).number)
+      puts I18n.t(:sure_to_delete_card, card: current_card(answer).number)
       account.destroy_card(answer.to_i) if gets.chomp == 'y'
       break
     end
@@ -120,8 +137,8 @@ class Console
 
   def destroy_account
     puts I18n.t(:sure_to_destroy_acc)
-    a = gets.chomp
-    account.destroy_account if a == 'y'
+    answer = gets.chomp
+    account.destroy_account if answer == 'y'
   end
 
   private
@@ -140,7 +157,7 @@ class Console
 
   def name_input
     puts I18n.t(:enter_name)
-    name = gets.chomp # .capitalize
+    name = gets.chomp
     return name if name != '' && name.capitalize == name
 
     @errors.push(I18n.t(:name_must_be))
@@ -162,7 +179,7 @@ class Console
     @errors.push(I18n.t(:login_must_longer)) if login.length < 4
     @errors.push(I18n.t(:login_must_shorter)) if login.length > 20
 
-    login_exists?(login) ? @errors.push(I18n.t(:account_exists)) : login # account.accounts.map(&:login).include? login
+    login_exists?(login) ? @errors.push(I18n.t(:account_exists)) : login
   end
 
   def login_exists?(login)
@@ -182,11 +199,13 @@ class Console
   end
 
   def choose_the_card(operation)
-    @current_account.card.any? ? (puts I18n.t(:choose_card, action: operation)) : (raise NoActiveCard) # (return puts I18n.t(:no_active_card))
+    # @current_account.card.any? ? (puts I18n.t(:choose_card, action: operation)) : (raise NoActiveCard)
+    puts I18n.t(:choose_card, action: operation)
     show_cards_with_index
 
     puts I18n.t(:press_exit)
     answer_card = gets.chomp
+    return answer_card if answer_card == 'exit'
 
     card_exists?(answer_card) ? answer_card : (raise WrongNumberError)
   end
@@ -208,7 +227,7 @@ class Console
   end
 
   def current_card(number)
-    @current_account.card[number]
+    @current_account.card[number.to_i - 1]
   end
 
   def current_account_cards

@@ -126,7 +126,6 @@ RSpec.describe Console do
       it do
         allow(current_subject).to receive_message_chain(:gets, :chomp) { 'test' }
         allow(current_subject).to receive(:exit)
-        # HELLO_PHRASES.each { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
         expect(current_subject).to receive(:puts).with(I18n.t(:console))
         current_subject.console
       end
@@ -277,7 +276,6 @@ RSpec.describe Console do
 
       before do
         allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*all_inputs)
-        # allow(current_subject).to receive(:accounts) { [instance_double('Account', login: login, password: password)] }
         allow_any_instance_of(Account).to receive(:accounts) { [instance_double('Account', login: login, password: password)] }
       end
 
@@ -306,10 +304,8 @@ RSpec.describe Console do
         let(:all_inputs) { ['test', 'test', login, password] }
 
         it do
-          # expect(current_subject).to receive(:main_menu)
-          expect(current_subject).to receive(:console)
-          # expect { current_subject.load }.to output(/#{ERROR_PHRASES[:user_not_exists]}/).to_stdout
           expect { current_subject.load }.to raise_error(BankErrors::NoAccountError)
+          expect(current_subject).to receive(:console)
         end
       end
     end
@@ -419,7 +415,8 @@ RSpec.describe Console do
     context 'without cards' do
       it 'shows message about not active cards' do
         current_subject.instance_variable_set(:@current_account, instance_double('Account', card: []))
-        expect { current_subject.destroy_card }.to output(/#{ERROR_PHRASES[:no_active_cards]}/).to_stdout
+        # expect { current_subject.destroy_card }.to output(/#{ERROR_PHRASES[:no_active_cards]}/).to_stdout
+        expect { current_subject.destroy_card }.to raise_error(BankErrors::NoActiveCard)
       end
     end
 
@@ -565,8 +562,6 @@ RSpec.describe Console do
     end
 
     context 'with cards' do
-      #let(:card_one) { { number: 1, type: 'test' } }
-      #let(:card_two) { { number: 2, type: 'test2' } }
       let(:card_one) { VirtualCard.new }
       let(:card_two) { VirtualCard.new }
       let(:fake_cards) { [card_one, card_two] }
@@ -607,12 +602,14 @@ RSpec.describe Console do
 
         it do
           allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(fake_cards.length + 1, 'exit')
-          expect { current_subject.put_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          # expect { current_subject.put_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          expect { current_subject.put_money }.to raise_error(BankErrors::WrongNumberError)
         end
 
         it do
           allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(-1, 'exit')
-          expect { current_subject.put_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          # expect { current_subject.put_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          expect { current_subject.put_money }.to raise_error(BankErrors::WrongNumberError)
         end
       end
 
@@ -635,7 +632,7 @@ RSpec.describe Console do
         end
 
         context 'with correct output' do
-          let(:commands) { [chosen_card_number, incorrect_money_amount] }
+          let(:commands) { [chosen_card_number, correct_money_amount_greater_than_tax] }
 
           it do
             expect { current_subject.put_money }.to output(/#{COMMON_PHRASES[:input_amount]}/).to_stdout
@@ -646,7 +643,8 @@ RSpec.describe Console do
           let(:commands) { [chosen_card_number, incorrect_money_amount] }
 
           it do
-            expect { current_subject.put_money }.to output(/#{ERROR_PHRASES[:correct_amount]}/).to_stdout
+            # expect { current_subject.put_money }.to output(/#{ERROR_PHRASES[:correct_amount]}/).to_stdout
+            expect { current_subject.put_money }.to raise_error(BankErrors::WrongAmountError)
           end
         end
 
@@ -655,20 +653,11 @@ RSpec.describe Console do
             let(:commands) { [chosen_card_number, correct_money_amount_lower_than_tax] }
 
             it do
-              # expect { current_subject.put_money }.to output(/#{ERROR_PHRASES[:tax_higher]}/).to_stdout
               expect { current_subject.put_money }.to raise_error(BankErrors::TaxTooHigh)
             end
           end
 
           context 'with tax lower than amount' do
-            #let(:custom_cards) do
-            #  [
-            #    { type: 'usual', balance: default_balance, tax: correct_money_amount_greater_than_tax * 0.02, number: 1 },
-            #    { type: 'capitalist', balance: default_balance, tax: 10, number: 1 },
-            #    { type: 'virtual', balance: default_balance, tax: 1, number: 1 }
-            #  ]
-            #end
-
             let(:custom_cards) do
               [
                 UsualCard.new,
@@ -687,6 +676,10 @@ RSpec.describe Console do
 
             after do
               File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
+            end
+
+            it do
+              expect { current_subject.put_money }.to output(/#{COMMON_PHRASES[:input_amount]}/).to_stdout
             end
           end
         end
@@ -709,18 +702,20 @@ RSpec.describe Console do
       let(:card_one) { CapitalistCard.new }
       let(:card_two) { CapitalistCard.new }
       let(:fake_cards) { [card_one, card_two] }
+      let(:operation) { 'withdrawing:' }
 
       context 'with correct outout' do
         it do
+          current_subject.instance_variable_set(:@current_account, current_subject.account)
           allow(current_subject.current_account).to receive(:card) { fake_cards }
-          current_subject.instance_variable_set(:@current_account, current_subject.current_account)
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
           expect { current_subject.withdraw_money }.to output(/#{COMMON_PHRASES[:choose_card_withdrawing]}/).to_stdout
+          # expect { current_subject.withdraw_money }.to output(I18n.t(:choose_card, action: operation)).to_stdout
           fake_cards.each_with_index do |card, i|
             message = /- #{card.number}, #{card.type}, press #{i + 1}/
             expect { current_subject.withdraw_money }.to output(message).to_stdout
           end
-          current_subject.withdraw_money
+          # current_subject.withdraw_money
         end
       end
 
@@ -741,26 +736,22 @@ RSpec.describe Console do
 
         it do
           allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(fake_cards.length + 1, 'exit')
-          expect { current_subject.withdraw_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          # expect { current_subject.withdraw_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          expect { current_subject.withdraw_money }.to raise_error(BankErrors::WrongNumberError)
         end
 
         it do
           allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(-1, 'exit')
-          expect { current_subject.withdraw_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          # expect { current_subject.withdraw_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          expect { current_subject.withdraw_money }.to raise_error(BankErrors::WrongNumberError)
         end
       end
 
       context 'with correct input of card number' do
-        # let(:card_one) { { number: 1, type: 'capitalist', balance: 50.0 } }
-        # let(:card_two) { { number: 2, type: 'capitalist', balance: 100.0 } }
-        # let(:card_one) { CapitalistCard.new }
-        # let(:card_two) { CapitalistCard.new }
-        # let(:fake_cards) { [card_one, card_two] }
         let(:chosen_card_number) { 1 }
         let(:incorrect_money_amount) { -2 }
-        let(:default_balance) { 50.0 }
         let(:correct_money_amount_lower_than_tax) { 5 }
-        let(:correct_money_amount_greater_than_tax) { 50 }
+        let(:correct_money_amount_greater_than_tax) { 100 }
 
         before do
           current_subject.instance_variable_set(:@current_account, current_subject.account)
@@ -770,10 +761,18 @@ RSpec.describe Console do
         end
 
         context 'with correct output' do
-          let(:commands) { [chosen_card_number, incorrect_money_amount] }
+          let(:commands) { [chosen_card_number, correct_money_amount_lower_than_tax] }
 
           it do
             expect { current_subject.withdraw_money }.to output(/#{COMMON_PHRASES[:withdraw_amount]}/).to_stdout
+          end
+        end
+
+        context 'with correct output greater than tax' do
+          let(:commands) { [chosen_card_number, correct_money_amount_greater_than_tax] }
+
+          it do
+            expect { current_subject.withdraw_money }.to raise_error(BankErrors::NoMoneyError)
           end
         end
       end
