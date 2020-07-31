@@ -1,10 +1,11 @@
 require 'i18n'
-
 require_relative 'config/application'
 
 require_relative 'lib/modules/bank_errors'
+
+require_relative 'lib/console/card_picker'
 require_relative 'lib/console/money_operations_console'
-require_relative 'lib/console/creater'
+require_relative 'lib/console/creator'
 require_relative 'lib/console/loader'
 require_relative 'lib/console'
 
