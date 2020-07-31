@@ -73,20 +73,22 @@ class Console
     puts e.message
     retry
   end
-=begin
-  menu_commands = {
-    SC: show_cards,
-    CC: create_card,
-    DC: destroy_card,
-    PM: put_money,
-    WM: withdraw_money,
-    SM: send_money,
-    DA: destroy_card
-  }.freeze
-=end
-  def commands(command)
-    raise CommandError if menu_commands[command.to_sym].nil?
 
+  MENU_COMMANDS = {
+    SC: :show_cards,
+    CC: :create_card,
+    DC: :destroy_card,
+    PM: :put_money,
+    WM: :withdraw_money,
+    SM: :send_money,
+    DA: :destroy_account
+  }.freeze
+
+  def commands(command)
+    raise CommandError if MENU_COMMANDS[command.to_sym].nil?
+
+    method(MENU_COMMANDS[command.to_sym]).call
+=begin
     case command
     when 'SC' then show_cards
     when 'CC' then create_card
@@ -98,6 +100,7 @@ class Console
     # else puts I18n.t(:wrong_command)
     else raise CommandError
     end
+=end
   end
 
   def show_cards
