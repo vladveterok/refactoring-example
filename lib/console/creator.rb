@@ -15,6 +15,7 @@ class Creator < Console
   private
 
   def ask_credentials
+=begin
     loop do
       account.name!(name_input)
       # account.name = name_input
@@ -28,13 +29,43 @@ class Creator < Console
 
       return_errors
     end
+=end
+    loop do
+      name
+      age
+      login
+      password
+      break if account.errors.empty?
+
+      return_errors
+    end
   end
 
+  def name
+    puts I18n.t(:enter_name)
+    account.name!(gets.chomp)
+  end
+
+  def age
+    puts I18n.t(:enter_age)
+    account.age!(gets.chomp.to_i)
+  end
+
+  def login
+    puts I18n.t(:enter_login)
+    account.login!(gets.chomp)
+  end
+
+  def password
+    puts I18n.t(:enter_password)
+    account.password!(gets.chomp)
+  end
+
+=begin
   def name_input
     puts I18n.t(:enter_name)
-    # gets.chomp
-    name = gets.chomp
-    name
+    gets.chomp
+
     # return name if name != '' && name.capitalize == name
 
     # @errors.push(I18n.t(:name_must_be))
@@ -73,6 +104,7 @@ class Creator < Console
   def password_input
     puts I18n.t(:enter_password)
     gets.chomp
+
     #password = gets.chomp
 
     # @errors.push(I18n.t(:password_must_be)) if password == ''
@@ -85,4 +117,5 @@ class Creator < Console
 
     # password
   end
+=end
 end
