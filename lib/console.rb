@@ -1,6 +1,8 @@
 class Console
   include BankErrors
-  include MoneyOperationsConsole
+  include Console::MoneyOperationsConsole
+  include Console::Creater
+  include Console::Loader
 
   # attr_accessor :current_account
 
@@ -46,6 +48,7 @@ class Console
     @current_account ||= account.current_account
   end
 
+=begin
   def create_the_first_account
     puts I18n.t(:create_first_account)
     gets.chomp == 'y' ? create : console
@@ -58,6 +61,7 @@ class Console
     @current_account = account.current_account
     main_menu
   end
+=end
 
   def main_menu
     loop do

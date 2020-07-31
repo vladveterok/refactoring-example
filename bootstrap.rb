@@ -3,7 +3,9 @@ require 'i18n'
 require_relative 'config/application'
 
 require_relative 'lib/modules/bank_errors'
-require_relative 'lib/modules_console/money_operations_console'
+require_relative 'lib/console/money_operations_console'
+require_relative 'lib/console/creater'
+require_relative 'lib/console/loader'
 require_relative 'lib/console'
 
 require_relative 'lib/modules/file_loader'
