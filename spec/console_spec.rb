@@ -131,7 +131,7 @@ RSpec.describe Console do
       end
     end
   end
-
+=begin
   describe '#create' do
     let(:success_name_input) { 'Denis' }
     let(:success_age_input) { '72' }
@@ -260,6 +260,7 @@ RSpec.describe Console do
       end
     end
   end
+=end
 =begin
   describe '#load' do
     context 'without active accounts' do
@@ -311,7 +312,7 @@ RSpec.describe Console do
     end
   end
 =end
-
+=begin
   describe '#create_the_first_account' do
     let(:cancel_input) { 'sdfsdfs' }
     let(:success_input) { 'y' }
@@ -334,7 +335,7 @@ RSpec.describe Console do
       current_subject.create_the_first_account
     end
   end
-
+=end
   describe '#main_menu' do
     let(:name) { 'John' }
     let(:commands) do

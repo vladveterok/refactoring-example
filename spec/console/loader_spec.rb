@@ -1,4 +1,6 @@
-RSpec.describe Loader do  
+RSpec.describe Loader do
+  OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'.freeze
+
   ASK_PHRASES = {
     name: 'Enter your name',
     login: 'Enter your login',

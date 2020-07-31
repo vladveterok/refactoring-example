@@ -12,6 +12,10 @@ class Loader < Console
     main_menu
   end
 end
+
+def create_the_first_account
+  Creator.new.create_the_first_account
+end
 =begin
 class Console
   module Loader

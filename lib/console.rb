@@ -2,7 +2,7 @@ class Console
   include BankErrors
   include Console::CardPicker
   include Console::MoneyOperationsConsole
-  include Console::Creator
+  # include Console::Creator
   # include Console::Loader
 
   MENU_COMMANDS = {
@@ -39,9 +39,20 @@ class Console
     retry
   end
 
+  #### SPLIT LOGIC
   def load
     Loader.new.load
   end
+
+  #### SPLIT LOGIC
+  def create
+    Creator.new.create
+  end
+
+  #### SPLIT LOGIC
+  # def create_the_first_account
+  #   raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
+  # end
 
   def current_account
     @current_account ||= account.current_account
