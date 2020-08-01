@@ -68,7 +68,7 @@ class Console
       break
     end
   end
-
+=begin
   def destroy_card
     loop do
       puts I18n.t(:if_want_delete)
@@ -83,6 +83,24 @@ class Console
       break
     end
   end
+=end
+  def destroy_card
+    # puts I18n.t(:if_want_delete)
+    # show_cards_with_index
+    # puts I18n.t(:press_exit)
+    return if (answer = choose_the_card('delete')) == 'exit'
+
+    # return if (answer = gets.chomp) == 'exit'
+
+    # next puts I18n.t(:wrong_number) unless card_exists?(answer)
+
+    puts I18n.t(:sure_to_delete_card, card: current_card(answer).number)
+    current_account.destroy_card(answer.to_i) if gets.chomp == 'y'
+    # break
+  rescue BankErrors::WrongNumberError => e
+    puts e.message
+    retry
+  end
 
   def destroy_account
     puts I18n.t(:sure_to_destroy_acc)
@@ -93,7 +111,7 @@ class Console
   private
 
   def choose_the_card(operation)
-    puts I18n.t(:choose_card, action: operation)
+    operation == 'delete' ? (puts I18n.t(:if_want_delete)) : (puts I18n.t(:choose_card, action: operation))
     show_cards_with_index
 
     puts I18n.t(:press_exit)

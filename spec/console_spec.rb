@@ -420,7 +420,7 @@ RSpec.describe Console do
     end
   end
 
-  describe '#destroy_card', focus: true do
+  describe '#destroy_card' do
     context 'without cards' do
       it 'shows message about not active cards' do
         current_subject.instance_variable_set(:@current_account, instance_double('Account', card: []))
