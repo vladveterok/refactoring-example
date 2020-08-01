@@ -7,10 +7,16 @@ class Loader < Console
     puts I18n.t(:enter_password)
     password = gets.chomp
 
-    account.load(login, password)
-    current_account
+    load_account(login, password)
+    # account.load(login, password)
+    # current_account
     main_menu
   end
+end
+
+def load_account(login, password)
+  account.load(login, password)
+  current_account
 end
 
 =begin

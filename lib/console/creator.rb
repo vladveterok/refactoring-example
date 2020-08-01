@@ -3,7 +3,8 @@ class Creator < Console
     ask_credentials
 
     account.create
-    @current_account = account.current_account
+    # @current_account = account.current_account
+    current_account
     main_menu
   end
 
@@ -15,21 +16,6 @@ class Creator < Console
   private
 
   def ask_credentials
-=begin
-    loop do
-      account.name!(name_input)
-      # account.name = name_input
-      account.age!(age_input)
-      # account.age = age_input
-      account.login!(login_input)
-      # account.login = login_input
-      account.password!(password_input)
-      # account.password = password_input
-      break if account.errors.empty?
-
-      return_errors
-    end
-=end
     loop do
       name
       age
@@ -62,6 +48,23 @@ class Creator < Console
   end
 
 =begin
+  def ask_credentials
+
+    loop do
+      account.name!(name_input)
+      # account.name = name_input
+      account.age!(age_input)
+      # account.age = age_input
+      account.login!(login_input)
+      # account.login = login_input
+      account.password!(password_input)
+      # account.password = password_input
+      break if account.errors.empty?
+
+      return_errors
+    end
+end
+
   def name_input
     puts I18n.t(:enter_name)
     gets.chomp

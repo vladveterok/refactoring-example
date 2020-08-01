@@ -15,7 +15,7 @@ class ConsoleMenu < Console
 
   def main_menu
     loop do
-      puts I18n.t(:menu, name: @current_account.name)
+      puts I18n.t(:menu, name: current_account.name)
 
       command = gets.chomp
       break if command == 'exit'
