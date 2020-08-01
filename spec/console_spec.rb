@@ -195,29 +195,12 @@ RSpec.describe Console do
       expect { current_subject.destroy_account }.to output(PhrasesHelper::COMMON_PHRASES[:destroy_account]).to_stdout
     end
 
-    context 'when deleting' do
-      it 'deletes account if user inputs is y' do
-        expect(current_subject).to receive_message_chain(:gets, :chomp) { success_input }
-        expect(current_subject.account).to receive(:accounts) { accounts }
-        # current_subject.account.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
-        current_subject.account
-                       .instance_variable_set(:@current_account, instance_double('Account', login: correct_login))
+    it 'doesnt delete account' do
+      expect(current_subject).to receive_message_chain(:gets, :chomp) { cancel_input }
 
-        current_subject.destroy_account
+      current_subject.destroy_account
 
-        expect(File.exist?(FileHelper::OVERRIDABLE_FILENAME)).to be true
-        file_accounts = YAML.load_file(FileHelper::OVERRIDABLE_FILENAME)
-        expect(file_accounts).to be_a Array
-        expect(file_accounts.size).to be 2
-      end
-
-      it 'doesnt delete account' do
-        expect(current_subject).to receive_message_chain(:gets, :chomp) { cancel_input }
-
-        current_subject.destroy_account
-
-        expect(File.exist?(FileHelper::OVERRIDABLE_FILENAME)).to be false
-      end
+      expect(File.exist?(FileHelper::OVERRIDABLE_FILENAME)).to be false
     end
   end
 

@@ -19,7 +19,7 @@ RSpec.describe ConsoleMenu do
         'WM' => :withdraw_money,
         'SM' => :send_money,
         'DA' => :destroy_account,
-        'exit' => :exit
+        # 'exit' => :exit
       }
     end
 
@@ -55,7 +55,7 @@ RSpec.describe ConsoleMenu do
 
       it 'outputs incorrect message on undefined command' do
         current_subject.instance_variable_set(:@current_account, instance_double('Account', name: name))
-        expect(current_subject).to receive(:exit)
+        # expect(current_subject).to receive('exit')
         allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(undefined_command, 'exit')
         expect { current_subject.main_menu }.to output(/#{PhrasesHelper::ERROR_PHRASES[:wrong_command]}/).to_stdout
       end

@@ -1,6 +1,10 @@
 RSpec.describe Account do
   let(:current_subject) { described_class.new }
 
+  before do
+    current_subject.instance_variable_set(:@file_path, FileHelper::OVERRIDABLE_FILENAME)
+  end
+
   describe '#create' do
     let(:success_name_input) { 'Denis' }
     let(:success_age_input) { '72' }
@@ -9,6 +13,15 @@ RSpec.describe Account do
     let(:success_inputs) { [success_name_input, success_age_input, success_login_input, success_password_input] }
 
     context 'with success result' do
+
+      before do
+        current_subject.name!('Denis')
+        current_subject.age!(72)
+        current_subject.login!('denis')
+        current_subject.password!('Denis1993')
+        allow(current_subject).to receive(:accounts).and_return([])
+      end
+
       it 'write to file Account instance' do
         current_subject.instance_variable_set(:@file_path, FileHelper::OVERRIDABLE_FILENAME)
         current_subject.create
@@ -71,6 +84,39 @@ RSpec.describe Account do
           expect(file_accounts.first.card).not_to include(card_one)
         end
       end
+    end
+  end
+
+  describe '#destroy_account' do
+    let(:correct_login) { 'test' }
+    let(:fake_login) { 'test1' }
+    let(:fake_login2) { 'test2' }
+    let(:correct_account) { instance_double('Account', login: correct_login) }
+    let(:fake_account) { instance_double('Account', login: fake_login) }
+    let(:fake_account2) { instance_double('Account', login: fake_login2) }
+    let(:accounts) { [correct_account, fake_account, fake_account2] }
+
+    context 'when deleting' do
+      it 'deletes account if user inputs is y' do
+        expect(current_subject).to receive(:accounts) { accounts }
+        current_subject.instance_variable_set(:@file_path, FileHelper::OVERRIDABLE_FILENAME)
+        current_subject.instance_variable_set(:@current_account, instance_double('Account', login: correct_login))
+        current_subject.destroy_account
+
+        expect(File.exist?(FileHelper::OVERRIDABLE_FILENAME)).to be true
+        file_accounts = YAML.load_file(FileHelper::OVERRIDABLE_FILENAME)
+        expect(file_accounts).to be_a Array
+        expect(file_accounts.size).to be 2
+      end
+=begin
+      it 'doesnt delete account' do
+        File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
+
+        current_subject.destroy_account
+
+        expect(File.exist?(FileHelper::OVERRIDABLE_FILENAME)).to be false
+      end
+=end
     end
   end
 end

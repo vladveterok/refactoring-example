@@ -15,6 +15,7 @@ class ConsoleMenu < Console
   }.freeze
 
   def main_menu
+    # binding.pry
     loop do
       puts I18n.t(:menu, name: current_account.name)
 

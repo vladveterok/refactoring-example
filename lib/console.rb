@@ -43,6 +43,7 @@ class Console
   end
 
   def main_menu
+    # binding.pry
     @main_menu ||= ConsoleMenu.new(current_account)
     @main_menu.main_menu
   end
@@ -77,9 +78,11 @@ class Console
   end
 
   def destroy_account
+    # binding.pry
     puts I18n.t(:sure_to_destroy_acc)
     answer = gets.chomp
-    account.destroy_account if answer == 'y'
+    current_account.destroy_account if answer == 'y'
+    exit if answer == 'y'
   end
 
   private
