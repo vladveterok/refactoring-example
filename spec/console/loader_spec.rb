@@ -1,25 +1,6 @@
 RSpec.describe Loader do
   # OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'.freeze
 
-=begin
-  ASK_PHRASES = {
-    name: 'Enter your name',
-    login: 'Enter your login',
-    password: 'Enter your password',
-    age: 'Enter your age'
-  }.freeze
-=end
-=begin
-  ERROR_PHRASES = {
-    user_not_exists: 'There is no account with given credentials',
-    wrong_command: 'Wrong command. Try again!',
-    no_active_cards: "There is no active cards!",
-    wrong_card_type: "Wrong card type. Try again!\n",
-    wrong_number: "You entered wrong number!\n",
-    correct_amount: 'You must input correct amount of money',
-    tax_higher: 'Your tax is higher than input amount'
-  }.freeze
-=end
   let(:current_subject) { described_class.new }
 
   before do
@@ -41,8 +22,10 @@ RSpec.describe Loader do
 
       before do
         allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*all_inputs)
-        # allow_any_instance_of(Account).to receive(:accounts) { [instance_double('Account', login: login, password: password)] }
-        allow(current_subject.account).to receive(:accounts) { [instance_double('Account', login: login, password: password)] }
+        # allow_any_instance_of(Account)
+        # .to receive(:accounts) { [instance_double('Account', login: login, password: password)] }
+        allow(current_subject.account)
+          .to receive(:accounts) { [instance_double('Account', login: login, password: password)] }
       end
 
       context 'with correct outout' do

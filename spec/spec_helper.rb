@@ -11,7 +11,6 @@ require_relative 'fixtures/file_helper'
 require_relative 'fixtures/phrases_helper'
 require_relative 'fixtures/cards_helper'
 
-
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
     expectations.include_chain_clauses_in_custom_matcher_descriptions = true

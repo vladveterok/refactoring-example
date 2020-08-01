@@ -3,7 +3,7 @@ module PhrasesHelper
     create_first_account: "There is no active accounts, do you want to be the first?[y/n]\n",
     destroy_account: "Are you sure you want to destroy account?[y/n]\n",
     if_you_want_to_delete: 'If you want to delete:',
-    choose_card: 'Choose the card for putting:',
+    choose_card: "Choose the card for putting:\n",
     choose_card_withdrawing: 'Choose the card for withdrawing:',
     input_amount: 'Input the amount of money you want to put on your card',
     withdraw_amount: 'Input the amount of money you want to withdraw'
@@ -19,9 +19,9 @@ module PhrasesHelper
   ERROR_PHRASES = {
     user_not_exists: 'There is no account with given credentials',
     wrong_command: 'Wrong command. Try again!',
-    no_active_cards: "There is no active cards!",
-    wrong_card_type: "Wrong card type. Try again!\n",
-    wrong_number: "You entered wrong number!\n",
+    no_active_cards: 'There is no active cards!',
+    wrong_card_type: 'Wrong card type. Try again!',
+    wrong_number: 'You entered wrong number!',
     correct_amount: 'You must input correct amount of money',
     tax_higher: 'Your tax is higher than input amount'
   }.freeze
@@ -45,7 +45,6 @@ module PhrasesHelper
       length: 'Your Age must be greeter then 23 and lower then 90'
     }
   }.freeze
-
 
   MAIN_OPERATIONS_TEXTS = [
     'If you want to:',

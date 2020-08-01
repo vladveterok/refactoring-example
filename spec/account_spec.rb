@@ -1,13 +1,4 @@
 RSpec.describe Account do
-  # OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'
-
-=begin
-  CARDS = {
-    usual: UsualCard.new,
-    capitalist: CapitalistCard.new,
-    virtual: VirtualCard.new
-  }.freeze
-=end
   let(:current_subject) { described_class.new }
 
   describe '#create' do
@@ -39,15 +30,8 @@ RSpec.describe Account do
         current_subject.instance_variable_set(:@current_account, current_subject)
       end
 
-      # after do
-      #  File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
-      # end
-
       CardsHelper::CARDS.each do |card_type, card_instance|
         it "create card with #{card_type} type" do
-          # expect(current_subject).to receive_message_chain(:gets, :chomp) { card_instance.type }
-          # expect(current_subject).to receive(:card) { card_instance }
-
           current_subject.create_card(card_type)
 
           expect(File.exist?(FileHelper::OVERRIDABLE_FILENAME)).to be true
@@ -72,22 +56,15 @@ RSpec.describe Account do
         let(:deletable_card_number) { 1 }
 
         before do
-          # current_subject.account.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
           current_subject.instance_variable_set(:@card, fake_cards)
           current_subject.instance_variable_set(:@current_account, current_subject)
           current_subject.instance_variable_set(:@file_path, FileHelper::OVERRIDABLE_FILENAME)
           allow(current_subject).to receive(:accounts) { [current_subject] }
         end
 
-        # after do
-        #  File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
-        # end
-
         it 'accept deleting' do
-          # commands = [deletable_card_number, accept_for_deleting]
-          # allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*commands)
-
-          expect { current_subject.destroy_card(deletable_card_number) }.to change { current_subject.current_account.card.size }.by(-1)
+          expect { current_subject.destroy_card(deletable_card_number) }
+            .to change { current_subject.current_account.card.size }.by(-1)
 
           expect(File.exist?(FileHelper::OVERRIDABLE_FILENAME)).to be true
           file_accounts = YAML.load_file(FileHelper::OVERRIDABLE_FILENAME)
