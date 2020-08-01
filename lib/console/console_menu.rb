@@ -21,7 +21,6 @@ class ConsoleMenu < Console
       break if command == 'exit'
 
       commands(command)
-      # puts "Wrong command. Try again!\n" if commands(gets.chomp).nil? # (gets.chomp)
     end
   rescue BankErrors::BankError => e
     puts e.message

@@ -21,23 +21,19 @@ class Console
     when 'load' then load
     else exit
     end
-    # main_menu
   rescue BankErrors::BankError => e
     puts e.message
     retry
   end
 
-  #### SPLIT LOGIC
   def load
     Loader.new.load
   end
 
-  #### SPLIT LOGIC
   def create
     Creator.new.create
   end
 
-  #### SPLIT LOGIC
   def create_the_first_account
     Creator.new.create_the_first_account
   end
@@ -46,7 +42,6 @@ class Console
     @current_account ||= account.current_account
   end
 
-  #### SPLIT LOGIC
   def main_menu
     @main_menu ||= ConsoleMenu.new(current_account)
     @main_menu.main_menu
@@ -68,35 +63,12 @@ class Console
       break
     end
   end
-=begin
-  def destroy_card
-    loop do
-      puts I18n.t(:if_want_delete)
-      show_cards_with_index
-      puts I18n.t(:press_exit)
 
-      break if (answer = gets.chomp) == 'exit'
-      next puts I18n.t(:wrong_number) unless card_exists?(answer)
-
-      puts I18n.t(:sure_to_delete_card, card: current_card(answer).number)
-      current_account.destroy_card(answer.to_i) if gets.chomp == 'y'
-      break
-    end
-  end
-=end
   def destroy_card
-    # puts I18n.t(:if_want_delete)
-    # show_cards_with_index
-    # puts I18n.t(:press_exit)
     return if (answer = choose_the_card('delete')) == 'exit'
-
-    # return if (answer = gets.chomp) == 'exit'
-
-    # next puts I18n.t(:wrong_number) unless card_exists?(answer)
 
     puts I18n.t(:sure_to_delete_card, card: current_card(answer).number)
     current_account.destroy_card(answer.to_i) if gets.chomp == 'y'
-    # break
   rescue BankErrors::WrongNumberError => e
     puts e.message
     retry
@@ -141,16 +113,11 @@ class Console
     (1..@current_account.card.length).include? card_number.to_i
   end
 
-  # def login_exists?(login)
-  #  account.accounts.map(&:login).include? login
-  # end
-
   def accounts
     account.accounts
   end
 
   def return_errors
-    # @errors.select! { |error| puts error.message }
     @errors = account.errors
     @errors.select! { |error| puts error.message }
   end
