@@ -377,8 +377,8 @@ RSpec.describe Console do
           current_subject.instance_variable_set(:@current_account, current_subject.account)
           allow(current_subject.current_account).to receive(:card) { fake_cards }
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
-         # expect { current_subject.withdraw_money }
-            # .to output(/#{PhrasesHelper::COMMON_PHRASES[:choose_card_withdrawing]}/).to_stdout
+          # expect { current_subject.withdraw_money }
+          # .to output(/#{PhrasesHelper::COMMON_PHRASES[:choose_card_withdrawing]}/).to_stdout
           # expect { current_subject.withdraw_money }.to output(I18n.t(:choose_card, action: operation)).to_stdout
           fake_cards.each_with_index do |card, index|
             # message = /- #{card.number}, #{card.type}, press #{i + 1}/

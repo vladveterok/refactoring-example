@@ -11,6 +11,7 @@ class ConsoleMenu < Console
     WM: :withdraw_money,
     SM: :send_money,
     DA: :destroy_account
+    # exit: :exit
   }.freeze
 
   def main_menu

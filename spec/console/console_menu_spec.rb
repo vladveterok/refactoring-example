@@ -38,5 +38,27 @@ RSpec.describe ConsoleMenu do
         # end
       end
     end
+
+    context 'when commands used', focus: true do
+      let(:undefined_command) { 'undefined' }
+
+      it 'calls specific methods on predefined commands' do
+        allow(current_subject).to receive(:exit)
+        current_subject.instance_variable_set(:@current_account, instance_double('Account', name: name))
+
+        commands.each do |command, method_name|
+          expect(current_subject).to receive(method_name)
+          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(command, 'exit')
+          current_subject.main_menu
+        end
+      end
+
+      it 'outputs incorrect message on undefined command' do
+        current_subject.instance_variable_set(:@current_account, instance_double('Account', name: name))
+        expect(current_subject).to receive(:exit)
+        allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(undefined_command, 'exit')
+        expect { current_subject.main_menu }.to output(/#{PhrasesHelper::ERROR_PHRASES[:wrong_command]}/).to_stdout
+      end
+    end
   end
 end
