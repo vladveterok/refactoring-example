@@ -6,7 +6,7 @@ SimpleCov.start do
 end
 
 require_relative '../bootstrap'
-require_relative '../account'
+
 require_relative 'fixtures/file_helper'
 require_relative 'fixtures/phrases_helper'
 require_relative 'fixtures/cards_helper'
@@ -22,7 +22,7 @@ RSpec.configure do |config|
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
-  config.after do # or :each or :all or :suite
+  config.after do
     File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
   end
 end

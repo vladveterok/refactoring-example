@@ -6,8 +6,8 @@ class Account
   include FileLoader
   include MoneyOperations
 
-  attr_accessor :card, :file_path #:name
-  attr_reader :name, :age, :login, :password, :errors, :current_account
+  attr_accessor :file_path
+  attr_reader :name, :age, :login, :password, :errors, :current_account, :card
 
   CARD_TYPES = {
     usual: UsualCard,
@@ -57,8 +57,6 @@ class Account
   end
 
   def create
-    # return_errors unless @errors.empty?
-
     new_accounts = accounts << @current_account = self
     save_in_file(new_accounts)
   end
@@ -94,10 +92,6 @@ class Account
   def accounts
     File.exist?('accounts.yml') ? YAML.load_file('accounts.yml') : []
   end
-
-  # def return_errors
-  #  @errors.select! { |error| raise error }
-  # end
 
   private
 

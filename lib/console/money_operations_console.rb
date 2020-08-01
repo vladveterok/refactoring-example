@@ -57,7 +57,7 @@ class Console
       all_cards = account.accounts.map(&:card).flatten
       return puts I18n.t(:no_such_card, card: card) unless all_cards.map(&:number).any? card
 
-      all_cards.select { |stored_card| stored_card.number == card }.first
+      all_cards.detect { |stored_card| stored_card.number == card }
     end
   end
 end

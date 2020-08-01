@@ -45,4 +45,9 @@ class Creator < Console
     puts I18n.t(:enter_password)
     account.password!(gets.chomp)
   end
+
+  def return_errors
+    @errors = account.errors
+    @errors.select! { |error| puts error.message }
+  end
 end

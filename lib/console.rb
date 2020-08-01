@@ -43,16 +43,13 @@ class Console
   end
 
   def main_menu
-    # binding.pry
     @main_menu ||= ConsoleMenu.new(current_account)
     @main_menu.main_menu
   end
 
   def show_cards
-    # raise NoActiveCard if @current_account.card.empty?
     raise NoActiveCard if current_account_cards.empty?
 
-    # @current_account.card.each { |card| puts "- #{card.number}, #{card.type}" }
     current_account_cards.each { |card| puts "- #{card.number}, #{card.type}" }
   end
 
@@ -78,7 +75,6 @@ class Console
   end
 
   def destroy_account
-    # binding.pry
     puts I18n.t(:sure_to_destroy_acc)
     answer = gets.chomp
     current_account.destroy_account if answer == 'y'
@@ -99,12 +95,7 @@ class Console
   end
 
   def show_cards_with_index
-    # raise BankErrors::NoActiveCard if @current_account.card.empty?
     raise BankErrors::NoActiveCard if current_account_cards.empty?
-
-    # current_account.card.each_with_index do |card, index|
-    #  puts I18n.t(:show_card, num: card.number, type: card.type, index: index + 1)
-    # end
 
     current_account_cards.each_with_index do |card, index|
       puts I18n.t(:show_card, num: card.number, type: card.type, index: index + 1)
@@ -112,7 +103,6 @@ class Console
   end
 
   def current_card(number)
-    # @current_account.card[number.to_i - 1]
     current_account_cards[number.to_i - 1]
   end
 
@@ -121,16 +111,10 @@ class Console
   end
 
   def card_exists?(card_number)
-    # (1..@current_account.card.length).include? card_number.to_i
-    (1..current_account_cards.length).include? card_number.to_i
+    (1..current_account_cards.length).cover? card_number.to_i
   end
 
   def accounts
     account.accounts
-  end
-
-  def return_errors
-    @errors = account.errors
-    @errors.select! { |error| puts error.message }
   end
 end

@@ -11,11 +11,9 @@ class ConsoleMenu < Console
     WM: :withdraw_money,
     SM: :send_money,
     DA: :destroy_account
-    # exit: :exit
   }.freeze
 
   def main_menu
-    # binding.pry
     loop do
       puts I18n.t(:menu, name: current_account.name)
 
