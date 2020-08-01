@@ -11,6 +11,7 @@ RSpec.describe Console do
     withdraw_amount: 'Input the amount of money you want to withdraw'
   }.freeze
 
+
   HELLO_PHRASES = [
     'Hello, we are RubyG bank!',
     '- If you want to create account - press `create`',

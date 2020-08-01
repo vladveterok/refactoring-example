@@ -92,14 +92,6 @@ RSpec.describe Account do
           file_accounts = YAML.load_file(OVERRIDABLE_FILENAME)
           expect(file_accounts.first.card).not_to include(card_one)
         end
-=begin
-        it 'decline deleting' do
-          commands = [deletable_card_number, reject_for_deleting]
-          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*commands)
-
-          expect { current_subject.destroy_card }.not_to change(current_subject.account.card, :size)
-        end
-=end
       end
     end
   end

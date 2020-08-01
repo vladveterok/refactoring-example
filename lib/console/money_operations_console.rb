@@ -37,7 +37,7 @@ class Console
 
       @current_account.send_money(card, recipient_card, amount.to_i)
       puts I18n.t(:money_sent, amount: amount, card: recipient_card.number,
-                              balance: card.balance, tax: card.withdraw_tax(amount.to_i))
+                               balance: card.balance, tax: card.withdraw_tax(amount.to_i))
     end
 
     def ask_money_amount(option)
