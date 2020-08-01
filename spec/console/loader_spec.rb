@@ -54,8 +54,12 @@ RSpec.describe Loader do
 
         it do
           expect { current_subject.load }.to raise_error(BankErrors::NoAccountError)
-          expect(current_subject).to receive(:console)
         end
+
+        # it do
+        #  current_subject.load
+        #  expect(current_subject).to receive(:main_menu)
+        # end
       end
     end
   end

@@ -100,6 +100,7 @@ RSpec.describe Console do
       let(:card_one) { VirtualCard.new }
       let(:card_two) { VirtualCard.new }
       let(:fake_cards) { [card_one, card_two] }
+      let(:message) { [PhrasesHelper::COMMON_PHRASES[:if_you_want_to_delete]] }
 
       context 'with correct outout' do
         it do
@@ -107,15 +108,17 @@ RSpec.describe Console do
           current_subject.instance_variable_set(:@current_account, current_subject.account)
           allow(current_subject.current_account).to receive(:card) { fake_cards }
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
-          expect { current_subject.destroy_card }
-            .to output(/#{PhrasesHelper::COMMON_PHRASES[:if_you_want_to_delete]}/).to_stdout
+          # expect { current_subject.destroy_card }
+          #  .to output(/#{PhrasesHelper::COMMON_PHRASES[:if_you_want_to_delete]}/).to_stdout
           # expect(current_subject).to receive(:puts).with(I18n.t(:if_want_delete))
-          fake_cards.each_with_index do |card, i|
-            message = I18n.t(:show_card, num: card.number, type: card.type, index: i + 1)
+          fake_cards.each_with_index do |card, index|
+            message << I18n.t(:show_card, num: card.number, type: card.type, index: index + 1)
             # message = /- #{card.number}, #{card.type}, press #{i + 1}/
-            expect { current_subject.destroy_card }.to output(message).to_stdout
+            # expect { current_subject.destroy_card }.to output(message).to_stdout
           end
-          current_subject.destroy_card
+          # current_subject.destroy_card
+          message << I18n.t(:press_exit)
+          expect { current_subject.destroy_card }.to output(/#{message.join("\n")}/).to_stdout
         end
       end
 
@@ -231,6 +234,7 @@ RSpec.describe Console do
       let(:card_one) { VirtualCard.new }
       let(:card_two) { VirtualCard.new }
       let(:fake_cards) { [card_one, card_two] }
+      let(:message) { [PhrasesHelper::COMMON_PHRASES[:choose_card]] }
 
       before do
         allow(card_one).to receive(:number).and_return 1
@@ -242,12 +246,15 @@ RSpec.describe Console do
           current_subject.instance_variable_set(:@current_account, current_subject.account)
           allow(current_subject.current_account).to receive(:card) { fake_cards }
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
-          expect { current_subject.put_money }.to output(/#{PhrasesHelper::COMMON_PHRASES[:choose_card]}/).to_stdout
-          fake_cards.each_with_index do |card, i|
-            message = /- #{card.number}, #{card.type}, press #{i + 1}/
-            expect { current_subject.put_money }.to output(message).to_stdout
+          # expect { current_subject.put_money }.to output(/#{PhrasesHelper::COMMON_PHRASES[:choose_card]}/).to_stdout
+          fake_cards.each_with_index do |card, index|
+            # message = /- #{card.number}, #{card.type}, press #{i + 1}/
+            # expect { current_subject.put_money }.to output(message).to_stdout
+            message << I18n.t(:show_card, num: card.number, type: card.type, index: index + 1)
           end
-          current_subject.put_money
+          message << I18n.t(:press_exit)
+          expect { current_subject.put_money }.to output(/#{message.join("\n")}/).to_stdout
+          # current_subject.put_money
         end
       end
 
@@ -338,10 +345,6 @@ RSpec.describe Console do
               end
             end
 
-            # after do
-            #   File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
-            # end
-
             it do
               expect { current_subject.put_money }
                 .to output(/#{PhrasesHelper::COMMON_PHRASES[:input_amount]}/).to_stdout
@@ -367,21 +370,25 @@ RSpec.describe Console do
       let(:card_one) { CapitalistCard.new }
       let(:card_two) { CapitalistCard.new }
       let(:fake_cards) { [card_one, card_two] }
-      let(:operation) { 'withdrawing:' }
+      let(:message) { [PhrasesHelper::COMMON_PHRASES[:choose_card_withdrawing]] }
 
       context 'with correct outout' do
         it do
           current_subject.instance_variable_set(:@current_account, current_subject.account)
           allow(current_subject.current_account).to receive(:card) { fake_cards }
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
-          expect { current_subject.withdraw_money }
-            .to output(/#{PhrasesHelper::COMMON_PHRASES[:choose_card_withdrawing]}/).to_stdout
+         # expect { current_subject.withdraw_money }
+            # .to output(/#{PhrasesHelper::COMMON_PHRASES[:choose_card_withdrawing]}/).to_stdout
           # expect { current_subject.withdraw_money }.to output(I18n.t(:choose_card, action: operation)).to_stdout
-          fake_cards.each_with_index do |card, i|
-            message = /- #{card.number}, #{card.type}, press #{i + 1}/
-            expect { current_subject.withdraw_money }.to output(message).to_stdout
+          fake_cards.each_with_index do |card, index|
+            # message = /- #{card.number}, #{card.type}, press #{i + 1}/
+            message << I18n.t(:show_card, num: card.number, type: card.type, index: index + 1)
+            # expect { current_subject.withdraw_money }.to output(message).to_stdout
           end
+          message << I18n.t(:press_exit)
           # current_subject.withdraw_money
+          expect { current_subject.withdraw_money }
+            .to output(/#{message.join("\n")}/).to_stdout
         end
       end
 
@@ -440,6 +447,109 @@ RSpec.describe Console do
 
           it do
             expect { current_subject.withdraw_money }.to raise_error(BankErrors::NoMoneyError)
+          end
+        end
+      end
+    end
+  end
+
+  describe '#send_money' do
+    context 'without cards' do
+      it 'shows message about not active cards' do
+        current_subject.instance_variable_set(:@current_account, instance_double('Account', card: []))
+        # expect { current_subject.withdraw_money }.to output(/#{ERROR_PHRASES[:no_active_cards]}/).to_stdout
+        expect { current_subject.send_money }.to raise_error(BankErrors::NoActiveCard)
+      end
+    end
+
+    context 'with cards' do
+      let(:card_one) { CapitalistCard.new }
+      let(:card_two) { CapitalistCard.new }
+      let(:fake_cards) { [card_one, card_two] }
+      let(:sender_operation) { 'putting:' }
+      let(:message) { [PhrasesHelper::COMMON_PHRASES[:choose_card]] }
+
+      context 'with correct outout' do
+        it do
+          current_subject.instance_variable_set(:@current_account, current_subject.account)
+          allow(current_subject.current_account).to receive(:card) { fake_cards }
+          allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
+
+          fake_cards.each_with_index do |card, index|
+            message << I18n.t(:show_card, num: card.number, type: card.type, index: index + 1)
+          end
+          message << I18n.t(:press_exit)
+          expect { current_subject.send_money }
+            .to output(/#{message.join("\n")}/).to_stdout
+        end
+      end
+
+      context 'when exit if first gets is exit' do
+        it do
+          current_subject.instance_variable_set(:@current_account, current_subject.account)
+          allow(current_subject.current_account).to receive(:card) { fake_cards }
+          expect(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
+          current_subject.send_money
+        end
+      end
+
+      context 'with incorrect input of card number' do
+        before do
+          current_subject.instance_variable_set(:@current_account, current_subject.account)
+          allow(current_subject.current_account).to receive(:card) { fake_cards }
+        end
+
+        it do
+          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(fake_cards.length + 1, 'exit')
+          # expect { current_subject.withdraw_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          expect { current_subject.send_money }.to raise_error(BankErrors::WrongNumberError)
+        end
+
+        it do
+          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(-1, 'exit')
+          # expect { current_subject.withdraw_money }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          expect { current_subject.send_money }.to raise_error(BankErrors::WrongNumberError)
+        end
+      end
+
+      context 'with correct input of card number' do
+        let(:chosen_card_number) { 1 }
+        let(:recipient_card) { card_two }
+        let(:incorrect_money_amount) { -2 }
+        let(:correct_money_amount_lower_than_tax) { 5 }
+        let(:correct_money_amount) { 20 }
+        let(:correct_money_amount_greater_than_tax) { 100 }
+
+        before do
+          current_subject.instance_variable_set(:@current_account, current_subject.account)
+          current_subject.current_account.instance_variable_set(:@card, fake_cards)
+          allow(current_subject.account).to receive(:accounts) { [current_subject.account] }
+
+          allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*commands)
+        end
+
+        context 'with correct output' do
+          let(:commands) { [chosen_card_number, recipient_card.number, correct_money_amount] }
+
+          it do
+            expect { current_subject.send_money }
+              .to output(/#{PhrasesHelper::COMMON_PHRASES[:withdraw_amount]}/).to_stdout
+          end
+        end
+
+        context 'with correct output lower than tax' do
+          let(:commands) { [chosen_card_number, recipient_card.number, correct_money_amount_lower_than_tax] }
+
+          it do
+            expect { current_subject.send_money }.to raise_error(BankErrors::TaxTooHigh)
+          end
+        end
+
+        context 'with correct output greater than tax' do
+          let(:commands) { [chosen_card_number, recipient_card.number, correct_money_amount_greater_than_tax] }
+
+          it do
+            expect { current_subject.send_money }.to raise_error(BankErrors::NoMoneyError)
           end
         end
       end
