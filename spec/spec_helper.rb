@@ -7,6 +7,10 @@ end
 
 require_relative '../bootstrap'
 require_relative '../account'
+require_relative 'fixtures/file_helper'
+require_relative 'fixtures/phrases_helper'
+require_relative 'fixtures/cards_helper'
+
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -20,6 +24,6 @@ RSpec.configure do |config|
   config.shared_context_metadata_behavior = :apply_to_host_groups
 
   config.after do # or :each or :all or :suite
-    File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
+    File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
   end
 end

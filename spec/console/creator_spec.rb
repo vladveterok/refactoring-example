@@ -1,13 +1,15 @@
 RSpec.describe Creator do
-  OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'.freeze
+  # OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'.freeze
 
+=begin
   ASK_PHRASES = {
     name: 'Enter your name',
     login: 'Enter your login',
     password: 'Enter your password',
     age: 'Enter your age'
   }.freeze
-
+=end
+=begin
   COMMON_PHRASES = {
     create_first_account: "There is no active accounts, do you want to be the first?[y/n]\n",
     destroy_account: "Are you sure you want to destroy account?[y/n]\n",
@@ -17,7 +19,8 @@ RSpec.describe Creator do
     input_amount: 'Input the amount of money you want to put on your card',
     withdraw_amount: 'Input the amount of money you want to withdraw'
   }.freeze
-
+=end
+=begin
   ACCOUNT_VALIDATION_PHRASES = {
     name: {
       first_letter: 'Your name must not be empty and starts with first upcase letter'
@@ -37,11 +40,11 @@ RSpec.describe Creator do
       length: 'Your Age must be greeter then 23 and lower then 90'
     }
   }.freeze
-  
+=end
   let(:current_subject) { described_class.new }
 
   before do
-    current_subject.account.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
+    current_subject.account.instance_variable_set(:@file_path, FileHelper::OVERRIDABLE_FILENAME)
   end
 
   describe '#create' do
@@ -60,14 +63,14 @@ RSpec.describe Creator do
         allow(current_subject).to receive(:accounts).and_return([])
       end
 
-      after do
-        File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
-      end
+      # after do
+      #  File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
+      # end
 
       it 'with correct outout' do
         allow(File).to receive(:open)
-        ASK_PHRASES.values.each { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
-        ACCOUNT_VALIDATION_PHRASES.values.map(&:values).each do |phrase|
+        PhrasesHelper::ASK_PHRASES.values.each { |phrase| expect(current_subject).to receive(:puts).with(phrase) }
+        PhrasesHelper::ACCOUNT_VALIDATION_PHRASES.values.map(&:values).each do |phrase|
           expect(current_subject).not_to receive(:puts).with(phrase)
         end
         current_subject.create
@@ -86,7 +89,7 @@ RSpec.describe Creator do
       context 'with name errors' do
         context 'without small letter' do
           let(:error_input) { 'some_test_name' }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:name][:first_letter] }
+          let(:error) { PhrasesHelper::ACCOUNT_VALIDATION_PHRASES[:name][:first_letter] }
           let(:current_inputs) { [error_input, success_age_input, success_login_input, success_password_input] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
@@ -98,28 +101,28 @@ RSpec.describe Creator do
 
         context 'when present' do
           let(:error_input) { '' }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login][:present] }
+          let(:error) { PhrasesHelper::ACCOUNT_VALIDATION_PHRASES[:login][:present] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
 
         context 'when longer' do
           let(:error_input) { 'E' * 3 }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login][:longer] }
+          let(:error) { PhrasesHelper::ACCOUNT_VALIDATION_PHRASES[:login][:longer] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
 
         context 'when shorter' do
           let(:error_input) { 'E' * 21 }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login][:shorter] }
+          let(:error) { PhrasesHelper::ACCOUNT_VALIDATION_PHRASES[:login][:shorter] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
 
         context 'when exists' do
           let(:error_input) { 'Denis1345' }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:login][:exists] }
+          let(:error) { PhrasesHelper::ACCOUNT_VALIDATION_PHRASES[:login][:exists] }
 
           before do
             allow(current_subject.account).to receive(:accounts) { [instance_double('Account', login: error_input)] }
@@ -131,7 +134,7 @@ RSpec.describe Creator do
 
       context 'with age errors' do
         let(:current_inputs) { [success_name_input, error_input, success_login_input, success_password_input] }
-        let(:error) { ACCOUNT_VALIDATION_PHRASES[:age][:length] }
+        let(:error) { PhrasesHelper::ACCOUNT_VALIDATION_PHRASES[:age][:length] }
 
         context 'with length minimum' do
           let(:error_input) { '22' }
@@ -151,21 +154,21 @@ RSpec.describe Creator do
 
         context 'when absent' do
           let(:error_input) { '' }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:password][:present] }
+          let(:error) { PhrasesHelper::ACCOUNT_VALIDATION_PHRASES[:password][:present] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
 
         context 'when longer' do
           let(:error_input) { 'E' * 5 }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:password][:longer] }
+          let(:error) { PhrasesHelper::ACCOUNT_VALIDATION_PHRASES[:password][:longer] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
 
         context 'when shorter' do
           let(:error_input) { 'E' * 31 }
-          let(:error) { ACCOUNT_VALIDATION_PHRASES[:password][:shorter] }
+          let(:error) { PhrasesHelper::ACCOUNT_VALIDATION_PHRASES[:password][:shorter] }
 
           it { expect { current_subject.create }.to output(/#{error}/).to_stdout }
         end
@@ -180,7 +183,7 @@ RSpec.describe Creator do
     it 'with correct outout' do
       expect(current_subject).to receive_message_chain(:gets, :chomp) {}
       expect(current_subject).to receive(:console)
-      expect { current_subject.create_the_first_account }.to output(COMMON_PHRASES[:create_first_account]).to_stdout
+      expect { current_subject.create_the_first_account }.to output(PhrasesHelper::COMMON_PHRASES[:create_first_account]).to_stdout
     end
 
     it 'calls create if user inputs is y' do

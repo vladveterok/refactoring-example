@@ -1,5 +1,5 @@
 RSpec.describe ConsoleMenu do
-  OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'.freeze
+  # OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'.freeze
   # stub_const('OVERRIDABLE_FILENAME', 'spec/fixtures/account.yml'.freeze)
 
   let(:console) { Console.new }

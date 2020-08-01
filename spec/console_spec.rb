@@ -1,6 +1,7 @@
 RSpec.describe Console do
   # OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'.freeze
 
+=begin
   COMMON_PHRASES = {
     create_first_account: "There is no active accounts, do you want to be the first?[y/n]\n",
     destroy_account: "Are you sure you want to destroy account?[y/n]\n",
@@ -10,24 +11,26 @@ RSpec.describe Console do
     input_amount: 'Input the amount of money you want to put on your card',
     withdraw_amount: 'Input the amount of money you want to withdraw'
   }.freeze
+=end
 
-
+=begin
   HELLO_PHRASES = [
     'Hello, we are RubyG bank!',
     '- If you want to create account - press `create`',
     '- If you want to load account - press `load`',
     '- If you want to exit - press `exit`'
   ].freeze
-
+=end
+=begin
   ASK_PHRASES = {
     name: 'Enter your name',
     login: 'Enter your login',
     password: 'Enter your password',
     age: 'Enter your age'
   }.freeze
-
+=end
   # rubocop:disable Metrics/LineLength
-
+=begin
   CREATE_CARD_PHRASES = [
     'You could create one of 3 card types',
     '- Usual card. 2% tax on card INCOME. 20$ tax on SENDING money from this card. 5% tax on WITHDRAWING money. For creation this card - press `usual`',
@@ -35,7 +38,7 @@ RSpec.describe Console do
     '- Virtual card. 1$ tax on card INCOME. 1$ tax on SENDING money from this card. 12% tax on WITHDRAWING money. For creation this card - press `virtual`',
     '- For exit - press `exit`'
   ].freeze
-
+end
   # rubocop:enable Metrics/LineLength
 
   ACCOUNT_VALIDATION_PHRASES = {
@@ -58,6 +61,7 @@ RSpec.describe Console do
     }
   }.freeze
 
+=begin
   ERROR_PHRASES = {
     user_not_exists: 'There is no account with given credentials',
     wrong_command: 'Wrong command. Try again!',
@@ -67,19 +71,9 @@ RSpec.describe Console do
     correct_amount: 'You must input correct amount of money',
     tax_higher: 'Your tax is higher than input amount'
   }.freeze
+=end
 
-  MAIN_OPERATIONS_TEXTS = [
-    'If you want to:',
-    '- show all cards - press SC',
-    '- create card - press CC',
-    '- destroy card - press DC',
-    '- put money on card - press PM',
-    '- withdraw money on card - press WM',
-    '- send money to another card  - press SM',
-    '- destroy account - press `DA`',
-    '- exit from account - press `exit`'
-  ].freeze
-
+=begin
   CARDS = {
     usual: {
       type: 'usual',
@@ -94,11 +88,11 @@ RSpec.describe Console do
       balance: 150.00
     }
   }.freeze
-
+=end
   let(:current_subject) { described_class.new }
 
   before do
-    current_subject.account.instance_variable_set(:@file_path, OVERRIDABLE_FILENAME)
+    current_subject.account.instance_variable_set(:@file_path, FileHelper::OVERRIDABLE_FILENAME)
   end
 
   describe '#console' do
@@ -441,7 +435,7 @@ RSpec.describe Console do
           current_subject.instance_variable_set(:@current_account, current_subject.account)
           allow(current_subject.current_account).to receive(:card) { fake_cards }
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
-          expect { current_subject.destroy_card }.to output(/#{COMMON_PHRASES[:if_you_want_to_delete]}/).to_stdout
+          expect { current_subject.destroy_card }.to output(/#{PhrasesHelper::COMMON_PHRASES[:if_you_want_to_delete]}/).to_stdout
           # expect(current_subject).to receive(:puts).with(I18n.t(:if_want_delete))
           fake_cards.each_with_index do |card, i|
             message = I18n.t(:show_card, num: card.number, type: card.type, index: i + 1)
@@ -470,12 +464,12 @@ RSpec.describe Console do
 
         it do
           allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(fake_cards.length + 1, 'exit')
-          expect { current_subject.destroy_card }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          expect { current_subject.destroy_card }.to output(/#{PhrasesHelper::ERROR_PHRASES[:wrong_number]}/).to_stdout
         end
 
         it do
           allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(-1, 'exit')
-          expect { current_subject.destroy_card }.to output(/#{ERROR_PHRASES[:wrong_number]}/).to_stdout
+          expect { current_subject.destroy_card }.to output(/#{PhrasesHelper::ERROR_PHRASES[:wrong_number]}/).to_stdout
         end
       end
 
@@ -491,9 +485,9 @@ RSpec.describe Console do
           allow(current_subject.account).to receive(:accounts) { [current_subject.account] }
         end
 
-        after do
-          File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
-        end
+        # after do
+        #  File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
+        # end
 =begin
         it 'accept deleting' do
           commands = [deletable_card_number, accept_for_deleting]
@@ -528,13 +522,13 @@ RSpec.describe Console do
     let(:fake_account2) { instance_double('Account', login: fake_login2) }
     let(:accounts) { [correct_account, fake_account, fake_account2] }
 
-    after do
-      File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
-    end
+    # after do
+    #  File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
+    # end
 
     it 'with correct outout' do
       expect(current_subject).to receive_message_chain(:gets, :chomp) {}
-      expect { current_subject.destroy_account }.to output(COMMON_PHRASES[:destroy_account]).to_stdout
+      expect { current_subject.destroy_account }.to output(PhrasesHelper::COMMON_PHRASES[:destroy_account]).to_stdout
     end
 
     context 'when deleting' do
@@ -546,8 +540,8 @@ RSpec.describe Console do
 
         current_subject.destroy_account
 
-        expect(File.exist?(OVERRIDABLE_FILENAME)).to be true
-        file_accounts = YAML.load_file(OVERRIDABLE_FILENAME)
+        expect(File.exist?(FileHelper::OVERRIDABLE_FILENAME)).to be true
+        file_accounts = YAML.load_file(FileHelper::OVERRIDABLE_FILENAME)
         expect(file_accounts).to be_a Array
         expect(file_accounts.size).to be 2
       end
@@ -557,7 +551,7 @@ RSpec.describe Console do
 
         current_subject.destroy_account
 
-        expect(File.exist?(OVERRIDABLE_FILENAME)).to be false
+        expect(File.exist?(FileHelper::OVERRIDABLE_FILENAME)).to be false
       end
     end
   end
@@ -586,7 +580,7 @@ RSpec.describe Console do
           current_subject.instance_variable_set(:@current_account, current_subject.account)
           allow(current_subject.current_account).to receive(:card) { fake_cards }
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
-          expect { current_subject.put_money }.to output(/#{COMMON_PHRASES[:choose_card]}/).to_stdout
+          expect { current_subject.put_money }.to output(/#{PhrasesHelper::COMMON_PHRASES[:choose_card]}/).to_stdout
           fake_cards.each_with_index do |card, i|
             message = /- #{card.number}, #{card.type}, press #{i + 1}/
             expect { current_subject.put_money }.to output(message).to_stdout
@@ -645,7 +639,7 @@ RSpec.describe Console do
           let(:commands) { [chosen_card_number, correct_money_amount_greater_than_tax] }
 
           it do
-            expect { current_subject.put_money }.to output(/#{COMMON_PHRASES[:input_amount]}/).to_stdout
+            expect { current_subject.put_money }.to output(/#{PhrasesHelper::COMMON_PHRASES[:input_amount]}/).to_stdout
           end
         end
 
@@ -684,12 +678,12 @@ RSpec.describe Console do
               end
             end
 
-            after do
-              File.delete(OVERRIDABLE_FILENAME) if File.exist?(OVERRIDABLE_FILENAME)
-            end
+            # after do
+            #   File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
+            # end
 
             it do
-              expect { current_subject.put_money }.to output(/#{COMMON_PHRASES[:input_amount]}/).to_stdout
+              expect { current_subject.put_money }.to output(/#{PhrasesHelper::COMMON_PHRASES[:input_amount]}/).to_stdout
             end
           end
         end
@@ -719,7 +713,7 @@ RSpec.describe Console do
           current_subject.instance_variable_set(:@current_account, current_subject.account)
           allow(current_subject.current_account).to receive(:card) { fake_cards }
           allow(current_subject).to receive_message_chain(:gets, :chomp) { 'exit' }
-          expect { current_subject.withdraw_money }.to output(/#{COMMON_PHRASES[:choose_card_withdrawing]}/).to_stdout
+          expect { current_subject.withdraw_money }.to output(/#{PhrasesHelper::COMMON_PHRASES[:choose_card_withdrawing]}/).to_stdout
           # expect { current_subject.withdraw_money }.to output(I18n.t(:choose_card, action: operation)).to_stdout
           fake_cards.each_with_index do |card, i|
             message = /- #{card.number}, #{card.type}, press #{i + 1}/
@@ -774,7 +768,7 @@ RSpec.describe Console do
           let(:commands) { [chosen_card_number, correct_money_amount_lower_than_tax] }
 
           it do
-            expect { current_subject.withdraw_money }.to output(/#{COMMON_PHRASES[:withdraw_amount]}/).to_stdout
+            expect { current_subject.withdraw_money }.to output(/#{PhrasesHelper::COMMON_PHRASES[:withdraw_amount]}/).to_stdout
           end
         end
 
