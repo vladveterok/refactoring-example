@@ -1,12 +1,7 @@
 RSpec.describe ConsoleMenu do
-  # OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'.freeze
-  # stub_const('OVERRIDABLE_FILENAME', 'spec/fixtures/account.yml'.freeze)
-
   let(:console) { Console.new }
   let(:current_account) { console.account }
   let(:current_subject) { described_class.new(current_account) }
-
-  # let(:current_subject) { described_class.new }
 
   describe '#main_menu' do
     let(:name) { 'John' }
@@ -18,28 +13,21 @@ RSpec.describe ConsoleMenu do
         'PM' => :put_money,
         'WM' => :withdraw_money,
         'SM' => :send_money,
-        'DA' => :destroy_account,
-        # 'exit' => :exit
+        'DA' => :destroy_account
       }
     end
 
     context 'with correct outout' do
       it do
-        # allow(current_subject).to receive(:show_cards)
         allow(current_subject).to receive(:exit)
         allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('exit')
         current_subject.instance_variable_set(:@current_account, instance_double('Account', name: name))
 
         expect { current_subject.main_menu }.to output(/Welcome, #{name}/).to_stdout
-
-        # MAIN_OPERATIONS_TEXTS.each do |text|
-        #  allow(current_subject).to receive_message_chain(:gets, :chomp).and_return('exit')
-        #  expect { current_subject.main_menu }.to output(/#{text}/).to_stdout
-        # end
       end
     end
 
-    context 'when commands used', focus: true do
+    context 'when commands used' do
       let(:undefined_command) { 'undefined' }
 
       it 'calls specific methods on predefined commands' do
@@ -55,7 +43,6 @@ RSpec.describe ConsoleMenu do
 
       it 'outputs incorrect message on undefined command' do
         current_subject.instance_variable_set(:@current_account, instance_double('Account', name: name))
-        # expect(current_subject).to receive('exit')
         allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(undefined_command, 'exit')
         expect { current_subject.main_menu }.to output(/#{PhrasesHelper::ERROR_PHRASES[:wrong_command]}/).to_stdout
       end

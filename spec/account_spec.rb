@@ -6,14 +6,7 @@ RSpec.describe Account do
   end
 
   describe '#create' do
-    let(:success_name_input) { 'Denis' }
-    let(:success_age_input) { '72' }
-    let(:success_login_input) { 'Denis' }
-    let(:success_password_input) { 'Denis1993' }
-    let(:success_inputs) { [success_name_input, success_age_input, success_login_input, success_password_input] }
-
     context 'with success result' do
-
       before do
         current_subject.name!('Denis')
         current_subject.age!(72)
@@ -37,7 +30,6 @@ RSpec.describe Account do
   describe '#create_card' do
     context 'when correct card choose' do
       before do
-        # allow(current_subject).to receive(:card) # .and_return([])
         allow(current_subject).to receive(:accounts) { [current_subject] }
         current_subject.instance_variable_set(:@file_path, FileHelper::OVERRIDABLE_FILENAME)
         current_subject.instance_variable_set(:@current_account, current_subject)
@@ -64,8 +56,6 @@ RSpec.describe Account do
       let(:fake_cards) { [card_one, card_two] }
 
       context 'with correct input of card number' do
-        let(:accept_for_deleting) { 'y' }
-        let(:reject_for_deleting) { 'asdf' }
         let(:deletable_card_number) { 1 }
 
         before do
@@ -108,15 +98,6 @@ RSpec.describe Account do
         expect(file_accounts).to be_a Array
         expect(file_accounts.size).to be 2
       end
-=begin
-      it 'doesnt delete account' do
-        File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
-
-        current_subject.destroy_account
-
-        expect(File.exist?(FileHelper::OVERRIDABLE_FILENAME)).to be false
-      end
-=end
     end
   end
 end

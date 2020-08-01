@@ -1,6 +1,4 @@
 RSpec.describe Loader do
-  # OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'.freeze
-
   let(:current_subject) { described_class.new }
 
   before do
@@ -22,8 +20,6 @@ RSpec.describe Loader do
 
       before do
         allow(current_subject).to receive_message_chain(:gets, :chomp).and_return(*all_inputs)
-        # allow_any_instance_of(Account)
-        # .to receive(:accounts) { [instance_double('Account', login: login, password: password)] }
         allow(current_subject.account)
           .to receive(:accounts) { [instance_double('Account', login: login, password: password)] }
       end
@@ -55,11 +51,6 @@ RSpec.describe Loader do
         it do
           expect { current_subject.load }.to raise_error(BankErrors::NoAccountError)
         end
-
-        # it do
-        #  current_subject.load
-        #  expect(current_subject).to receive(:main_menu)
-        # end
       end
     end
   end

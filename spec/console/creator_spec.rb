@@ -1,6 +1,4 @@
 RSpec.describe Creator do
-  # OVERRIDABLE_FILENAME = 'spec/fixtures/account.yml'.freeze
-
   let(:current_subject) { described_class.new }
 
   before do
@@ -22,10 +20,6 @@ RSpec.describe Creator do
         allow(current_subject).to receive(:main_menu)
         allow(current_subject).to receive(:accounts).and_return([])
       end
-
-      # after do
-      #  File.delete(FileHelper::OVERRIDABLE_FILENAME) if File.exist?(FileHelper::OVERRIDABLE_FILENAME)
-      # end
 
       it 'with correct outout' do
         allow(File).to receive(:open)
