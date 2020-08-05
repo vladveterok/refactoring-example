@@ -1,37 +1,41 @@
 module Validation
-  def validate_string
+  def validate_string(string:, error:)
     # some code here
   end
 
-  def name_errors(name, errors)
-    return errors.push(BankErrors::NoNameError.new) if name == ''
-    return errors.push(BankErrors::NoNameError.new) unless name.capitalize == name
+  def validate_class(object:, class:, error:)
+    # some code here
   end
 
-  def age_errors(age, errors)
-    return errors.push(BankErrors::AgeError.new) unless age.is_a?(Integer)
-    return errors.push(BankErrors::AgeError.new) if age.to_i < Account::AGE_RANGE.min
-    return errors.push(BankErrors::AgeError.new) if age.to_i > Account::AGE_RANGE.max
+  def name_errors(name:, errors:)
+    return collect_errors(BankErrors::NoNameError.new, errors) if name.empty?
+    return collect_errors(BankErrors::NoNameError.new, errors) unless name.capitalize == name
   end
 
-  def login_errors(login, errors)
-    return errors.push(BankErrors::NoLoginError.new) if login == ''
-    return errors.push(BankErrors::ShortLoginError.new) if login.length < Account::LOGIN_LENGTH.min
-    return errors.push(BankErrors::LongLoginError.new) if login.length > Account::LOGIN_LENGTH.max
-    return errors.push(BankErrors::AccountExists.new) if login_exists?(login)
+  def age_errors(age:, errors:, range:)
+    return collect_errors(BankErrors::AgeError.new, errors) unless age.is_a?(Integer)
+    return collect_errors(BankErrors::AgeError.new, errors) if age.to_i < range.min
+    return collect_errors(BankErrors::AgeError.new, errors) if age.to_i > range.max
   end
 
-  def password_errors(password, errors)
-    return errors.push(BankErrors::NoPasswordError.new) if password == ''
-    return errors.push(BankErrors::ShortPasswordError.new) if password.length < Account::PASSWORD_LENGTH.min
-    return errors.push(BankErrors::LongPasswordError.new) if password.length > Account::PASSWORD_LENGTH.max
+  def login_errors(login:, errors:, length:)
+    return collect_errors(BankErrors::NoLoginError.new, errors) if login == ''
+    return collect_errors(BankErrors::ShortLoginError.new, errors) if login.length < length.min
+    return collect_errors(BankErrors::LongLoginError.new, errors) if login.length > length.max
+    return collect_errors(BankErrors::AccountExists.new, errors) if login_exists?(login)
+  end
+
+  def password_errors(password:, errors:, length:)
+    return collect_errors(BankErrors::NoPasswordError.new, errors) if password.empty?
+    return collect_errors(BankErrors::ShortPasswordError.new, errors) if password.length < length.min
+    return collect_errors(BankErrors::LongPasswordError.new, errors) if password.length > length.max
   end
 
   def raise_error(error)
-    # some code here
+    raise error
   end
 
-  def collect_errors(error)
-    # some code here
+  def collect_errors(error, errors)
+    errors.push(error)
   end
 end
