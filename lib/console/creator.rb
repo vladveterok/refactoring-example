@@ -16,10 +16,11 @@ class Creator < Console
 
   def ask_credentials
     loop do
-      name
-      age
-      login
-      password
+      account.credentials(name: name, age: age, login: login, password: password)
+      # name
+      # age
+      # login
+      # password
       break if account.errors.empty?
 
       return_errors
@@ -28,22 +29,26 @@ class Creator < Console
 
   def name
     puts I18n.t(:enter_name)
-    account.name!(gets.chomp)
+    gets.chomp
+    # account.name!(gets.chomp)
   end
 
   def age
     puts I18n.t(:enter_age)
-    account.age!(gets.chomp.to_i)
+    gets.chomp.to_i
+    # account.age!(gets.chomp.to_i)
   end
 
   def login
     puts I18n.t(:enter_login)
-    account.login!(gets.chomp)
+    gets.chomp
+    # account.login!(gets.chomp)
   end
 
   def password
     puts I18n.t(:enter_password)
-    account.password!(gets.chomp)
+    gets.chomp
+    # account.password!(gets.chomp)
   end
 
   def return_errors

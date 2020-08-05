@@ -7,8 +7,7 @@ class Account
   include FileLoader
   include MoneyOperations
 
-  attr_accessor :file_path
-  attr_reader :name, :age, :login, :password, :errors, :current_account, :card
+  attr_reader :name, :age, :login, :password, :errors, :current_account, :card, :file_path
 
   CARD_TYPES = {
     usual: UsualCard,
@@ -32,33 +31,43 @@ class Account
     @current_account = nil
   end
 
+  def credentials(name:, age:, login:, password:)
+    name_errors(name: name, errors: @errors)
+    age_errors(age: age, errors: @errors, range: AGE_RANGE)
+    login_errors(login: login, errors: @errors, length: LOGIN_LENGTH)
+    password_errors(password: password, errors: @errors, length: PASSWORD_LENGTH)
+
+    @name = name
+    @age = age
+    @login = login
+    @password = password
+  end
+
+=begin
   def name!(name)
     name_errors(name: name, errors: @errors)
-
     @name = name
   end
 
   def age!(age)
     age_errors(age: age, errors: @errors, range: AGE_RANGE)
-
     @age = age
   end
 
   def login!(login)
     login_errors(login: login, errors: @errors, length: LOGIN_LENGTH)
-
     @login = login
   end
 
   def password!(password)
     password_errors(password: password, errors: @errors, length: PASSWORD_LENGTH)
-
     @password = password
   end
+=end
 
   def create
     new_accounts = accounts << @current_account = self
-    save_in_file(new_accounts)
+    save_in_file(new_accounts, @file_path)
   end
 
   def load(login, password)
@@ -86,12 +95,12 @@ class Account
     accounts.each do |account|
       new_accounts.push(account) unless account.login == @current_account.login
     end
-    save_in_file(new_accounts)
+    save_in_file(new_accounts, @file_path)
   end
 
-  # def accounts
-  #  File.exist?('accounts.yml') ? YAML.load_file('accounts.yml') : []
-  # end
+  def accounts
+    read_file(@file_path)
+  end
 
   private
 
@@ -99,15 +108,21 @@ class Account
     accounts.map(&:login).include? login
   end
 
-  # def update_account
-  #  new_accounts = []
-  #  accounts.each do |account|
-  #    account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
-  #  end
-  #  save_in_file(new_accounts)
-  # end
+  def update_card(card)
+    new_accounts = []
+    accounts.each do |account|
+      account.card.collect! { |stored_card| stored_card.number == card.number ? card : stored_card }
+      new_accounts.push(account)
+    end
 
-  # def save_in_file(data)
-  #  File.open(@file_path, 'w') { |f| f.write data.to_yaml }
-  # end
+    save_in_file(new_accounts, @file_path)
+  end
+
+  def update_account
+    new_accounts = []
+    accounts.each do |account|
+      account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
+    end
+    save_in_file(new_accounts, @file_path)
+  end
 end
