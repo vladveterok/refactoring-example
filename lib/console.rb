@@ -82,17 +82,14 @@ class Console
   end
 
   def withdraw_money
-    # Transactions.new(current_account).withdraw_money
     withdrawal(@current_account)
   end
 
   def put_money
-    # Transactions.new(current_account).put_money
     putting(@current_account)
   end
 
   def send_money
-    # Transactions.new(current_account).send_money
     sending(@current_account)
   end
 

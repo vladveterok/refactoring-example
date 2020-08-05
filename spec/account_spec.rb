@@ -8,10 +8,7 @@ RSpec.describe Account do
   describe '#create' do
     context 'with success result' do
       before do
-        current_subject.credentials(name: 'Denis', age: 72, login: 'denis', password: 'Denis1993') # name('Denis')
-        # current_subject.age!(72)
-        # current_subject.login!('denis')
-        # current_subject.password!('Denis1993')
+        current_subject.credentials(name: 'Denis', age: 72, login: 'denis', password: 'Denis1993')
         allow(current_subject).to receive(:accounts).and_return([])
       end
 

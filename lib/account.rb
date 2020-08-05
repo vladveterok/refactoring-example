@@ -43,28 +43,6 @@ class Account
     @password = password
   end
 
-=begin
-  def name!(name)
-    name_errors(name: name, errors: @errors)
-    @name = name
-  end
-
-  def age!(age)
-    age_errors(age: age, errors: @errors, range: AGE_RANGE)
-    @age = age
-  end
-
-  def login!(login)
-    login_errors(login: login, errors: @errors, length: LOGIN_LENGTH)
-    @login = login
-  end
-
-  def password!(password)
-    password_errors(password: password, errors: @errors, length: PASSWORD_LENGTH)
-    @password = password
-  end
-=end
-
   def create
     new_accounts = accounts << @current_account = self
     save_in_file(new_accounts, @file_path)
