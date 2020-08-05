@@ -3,6 +3,7 @@ require 'pry'
 
 class Account
   include BankErrors
+  include Validation
   include FileLoader
   include MoneyOperations
 
@@ -32,30 +33,35 @@ class Account
   end
 
   def name!(name)
-    return @errors.push(NoNameError.new) unless name != '' && name.capitalize == name
+    # return @errors.push(NoNameError.new) unless name != '' && name.capitalize == name
+    name_errors(name, @errors)
 
     @name = name
   end
 
   def age!(age)
-    return @errors.push(AgeError.new) unless age.is_a?(Integer) && age.to_i >= 23 && age.to_i <= 90
+    # return @errors.push(AgeError.new) unless age.is_a?(Integer) # && age.to_i >= 23 && age.to_i <= 90
+    # return @errors.push(AgeError.new) if age.to_i < AGE_RANGE.min || age.to_i > AGE_RANGE.max
+    age_errors(age, @errors)
 
     @age = age
   end
 
   def login!(login)
-    @errors.push(NoLoginError.new) if login == ''
-    @errors.push(ShortLoginError.new) if login.length < 4
-    @errors.push(LongLoginError.new) if login.length > 20
-    @errors.push(AccountExists.new) if login_exists?(login)
+    # @errors.push(NoLoginError.new) if login == ''
+    # @errors.push(ShortLoginError.new) if login.length < LOGIN_LENGTH.min
+    # @errors.push(LongLoginError.new) if login.length > LOGIN_LENGTH.max
+    # @errors.push(AccountExists.new) if login_exists?(login)
+    login_errors(login, @errors)
 
     @login = login
   end
 
   def password!(password)
-    @errors.push(NoPasswordError.new) if password == ''
-    @errors.push(ShortPasswordError.new) if password.length < 6
-    @errors.push(LongPasswordError.new) if password.length > 30
+    # @errors.push(NoPasswordError.new) if password == ''
+    # @errors.push(ShortPasswordError.new) if password.length < PASSWORD_LENGTH.min
+    # @errors.push(LongPasswordError.new) if password.length > PASSWORD_LENGTH.max
+    password_errors(password, @errors)
 
     @password = password
   end
