@@ -15,6 +15,10 @@ class Account
     virtual: VirtualCard
   }.freeze
 
+  LOGIN_LENGTH = (4..20).freeze
+  PASSWORD_LENGTH = (6..30).freeze
+  AGE_RANGE = (23..90).freeze
+
   def initialize
     @errors = []
     @file_path = 'accounts.yml'
