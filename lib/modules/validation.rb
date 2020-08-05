@@ -1,12 +1,4 @@
 module Validation
-  def validate_string(string:, error:)
-    # some code here
-  end
-
-  def validate_class(object:, class:, error:)
-    # some code here
-  end
-
   def name_errors(name:, errors:)
     return collect_errors(BankErrors::NoNameError.new, errors) if name.empty?
     return collect_errors(BankErrors::NoNameError.new, errors) unless name.capitalize == name

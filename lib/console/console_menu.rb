@@ -1,4 +1,6 @@
 class ConsoleMenu < Console
+  attr_reader :current_account
+
   def initialize(current_account)
     @current_account = current_account
   end

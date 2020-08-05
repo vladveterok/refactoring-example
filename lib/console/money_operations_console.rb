@@ -2,31 +2,31 @@ class Console
   module MoneyOperationsConsole
     include BankErrors
 
-    def withdraw_money
+    def withdrawal(current_account)
       answer_card = choose_the_card('withdrawing:')
       return if answer_card == 'exit'
 
       card = current_card(answer_card)
       amount = ask_money_amount('withdraw')
 
-      @current_account.withdraw_money(card, amount.to_i)
+      current_account.withdraw_money(card, amount.to_i)
       puts I18n.t(:money_withdrawn, amount: amount, card: card.number,
                                     balance: card.balance, tax: card.withdraw_tax(amount.to_i))
     end
 
-    def put_money
+    def putting(current_account)
       answer_card = choose_the_card('putting:')
       return if answer_card == 'exit'
 
       card = current_card(answer_card)
       amount = ask_money_amount('put on your card')
 
-      @current_account.put_money(card, amount.to_i)
+      current_account.put_money(card, amount.to_i)
       puts I18n.t(:money_put, amount: amount, card: card.number,
                               balance: card.balance, tax: card.withdraw_tax(amount.to_i))
     end
 
-    def send_money
+    def sending(current_account)
       answer_sender_card = choose_the_card('putting:')
       return if answer_sender_card == 'exit'
 
@@ -35,7 +35,7 @@ class Console
 
       amount = ask_money_amount('withdraw')
 
-      @current_account.send_money(card, recipient_card, amount.to_i)
+      current_account.send_money(card, recipient_card, amount.to_i)
       puts I18n.t(:money_sent, amount: amount, card: recipient_card.number,
                                balance: card.balance, tax: card.withdraw_tax(amount.to_i))
     end
