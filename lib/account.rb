@@ -22,11 +22,6 @@ class Account
   def initialize
     @errors = []
     @file_path = 'accounts.yml'
-
-    @name = nil
-    @login = nil
-    @age = 0
-    @password = nil
     @card = []
     @current_account = nil
   end

@@ -1,7 +1,6 @@
 class BasicCard
   include BankErrors
 
-  # attr_accessor :balance
   attr_reader :number
   CARD_NUMBER_LENGTH = 16
 
