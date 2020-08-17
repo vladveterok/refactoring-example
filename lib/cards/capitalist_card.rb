@@ -19,10 +19,6 @@ class CapitalistCard < BasicCard
     @number = generate_card_number
   end
 
-  def number
-    @number ||= generate_card_number
-  end
-
   def withdraw_tax(amount)
     tax(amount, TAX_PERCENT[:withdraw], TAX_FIXED[:withdraw])
   end
