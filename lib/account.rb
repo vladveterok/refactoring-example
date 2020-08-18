@@ -40,7 +40,8 @@ class Account
   end
 
   def create
-    new_accounts = accounts << @current_account = self
+    @current_account = self
+    new_accounts = accounts << @current_account
     save_in_file(new_accounts, FILE_PATH)
   end
 
