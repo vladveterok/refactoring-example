@@ -2,7 +2,8 @@ RSpec.describe Creator do
   let(:current_subject) { described_class.new }
 
   before do
-    current_subject.account.instance_variable_set(:@file_path, FileHelper::OVERRIDABLE_FILENAME)
+    # current_subject.account.instance_variable_set(FILE_PATH, FileHelper::OVERRIDABLE_FILENAME)
+    stub_const('Account::FILE_PATH', FileHelper::OVERRIDABLE_FILENAME)
   end
 
   describe '#create' do

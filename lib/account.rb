@@ -9,6 +9,8 @@ class Account
 
   attr_reader :name, :age, :login, :password, :errors, :current_account, :card, :file_path
 
+  FILE_PATH = 'accounts.yml'.freeze
+
   CARD_TYPES = {
     usual: UsualCard,
     capitalist: CapitalistCard,
@@ -21,7 +23,7 @@ class Account
 
   def initialize
     @errors = []
-    @file_path = 'accounts.yml'
+    # @file_path = 'accounts.yml'
     @card = []
     @current_account = nil
   end
@@ -40,7 +42,7 @@ class Account
 
   def create
     new_accounts = accounts << @current_account = self
-    save_in_file(new_accounts, @file_path)
+    save_in_file(new_accounts, FILE_PATH)
   end
 
   def load(login, password)
@@ -68,11 +70,11 @@ class Account
     accounts.each do |account|
       new_accounts.push(account) unless account.login == @current_account.login
     end
-    save_in_file(new_accounts, @file_path)
+    save_in_file(new_accounts, FILE_PATH)
   end
 
   def accounts
-    read_file(@file_path)
+    read_file(FILE_PATH)
   end
 
   private
@@ -88,7 +90,7 @@ class Account
       new_accounts.push(account)
     end
 
-    save_in_file(new_accounts, @file_path)
+    save_in_file(new_accounts, FILE_PATH)
   end
 
   def update_account
@@ -96,6 +98,6 @@ class Account
     accounts.each do |account|
       account.login == @current_account.login ? new_accounts.push(@current_account) : new_accounts.push(account)
     end
-    save_in_file(new_accounts, @file_path)
+    save_in_file(new_accounts, FILE_PATH)
   end
 end
