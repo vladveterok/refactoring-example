@@ -46,7 +46,7 @@ class Account
   end
 
   def load(login, password)
-    @current_account = accounts.find { |a| login == a.login && password == a.password }
+    @current_account = accounts.find { |account| login == account.login && password == account.password }
 
     raise_error(NoAccountError) if @current_account.nil?
   end

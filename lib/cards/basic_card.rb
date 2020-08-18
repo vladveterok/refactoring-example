@@ -3,7 +3,7 @@ class BasicCard
 
   attr_reader :number
   attr_accessor :balance
-  
+
   CARD_NUMBER_LENGTH = 16
 
   TAX_PERCENT = {
