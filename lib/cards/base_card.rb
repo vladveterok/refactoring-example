@@ -1,4 +1,4 @@
-class BasicCard
+class BaseCard
   include BankErrors
 
   attr_reader :number

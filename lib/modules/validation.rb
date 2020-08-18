@@ -10,7 +10,7 @@ module Validation
   end
 
   def login_errors(login:, errors:, length:)
-    return collect_errors(BankErrors::NoLoginError.new, errors) if login == ''
+    return collect_errors(BankErrors::NoLoginError.new, errors) if login.empty?
     return collect_errors(BankErrors::ShortLoginError.new, errors) if login.length < length.min
     return collect_errors(BankErrors::LongLoginError.new, errors) if login.length > length.max
     return collect_errors(BankErrors::AccountExists.new, errors) if login_exists?(login)

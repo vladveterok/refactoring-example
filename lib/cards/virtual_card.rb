@@ -1,4 +1,4 @@
-class VirtualCard < BasicCard
+class VirtualCard < BaseCard
   # in cents
   TAX_PERCENT = {
     withdraw: 88,

@@ -1,4 +1,4 @@
-class UsualCard < BasicCard
+class UsualCard < BaseCard
   # in cents
   TAX_PERCENT = {
     withdraw: 5,
