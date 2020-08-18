@@ -6,8 +6,7 @@ module Validation
 
   def age_errors(age:, errors:, range:)
     return collect_errors(BankErrors::AgeError.new, errors) unless age.is_a?(Integer)
-    return collect_errors(BankErrors::AgeError.new, errors) if age.to_i < range.min
-    return collect_errors(BankErrors::AgeError.new, errors) if age.to_i > range.max
+    return collect_errors(BankErrors::AgeError.new, errors) unless range.include?(age.to_i)
   end
 
   def login_errors(login:, errors:, length:)
