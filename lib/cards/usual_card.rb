@@ -1,6 +1,4 @@
 class UsualCard < BasicCard
-  attr_reader :balance
-
   # in cents
   TAX_PERCENT = {
     withdraw: 5,
@@ -14,9 +12,8 @@ class UsualCard < BasicCard
     sender: 20
   }.freeze
 
-  def initialize
-    @balance = 50.00
-    @number = generate_card_number
+  def balance
+    @balance ||= 50.00
   end
 
   def withdraw_tax(amount)

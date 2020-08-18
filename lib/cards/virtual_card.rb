@@ -1,6 +1,4 @@
 class VirtualCard < BasicCard
-  attr_reader :balance
-
   # in cents
   TAX_PERCENT = {
     withdraw: 88,
@@ -14,9 +12,8 @@ class VirtualCard < BasicCard
     sender: 1
   }.freeze
 
-  def initialize
-    @balance = 150.00
-    @number = generate_card_number
+  def balance
+    @balance ||= 150.00
   end
 
   def withdraw_tax(amount)

@@ -278,7 +278,8 @@ RSpec.describe Console do
 
           before do
             custom_cards.each do |custom_card|
-              custom_card.balance!(default_balance)
+              # custom_card.balance!(default_balance)
+              custom_card.balance = default_balance
             end
           end
 
