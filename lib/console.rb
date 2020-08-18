@@ -73,7 +73,7 @@ class Console
     return if (answer = choose_the_card(COMMANDS[:delete])) == COMMANDS[:exit]
 
     puts I18n.t(:sure_to_delete_card, card: current_card(answer).number)
-    current_account.destroy_card(answer.to_i) if gets.chomp == 'y'
+    current_account.destroy_card(answer) if gets.chomp == COMMANDS[:yes]
   rescue BankErrors::WrongNumberError => e
     puts e.message
     retry
@@ -82,8 +82,8 @@ class Console
   def destroy_account
     puts I18n.t(:sure_to_destroy_acc)
     answer = gets.chomp
-    current_account.destroy_account if answer == 'y'
-    exit if answer == 'y'
+    current_account.destroy_account if answer == COMMANDS[:yes]
+    exit if answer == COMMANDS[:yes]
   end
 
   def withdraw_money
@@ -122,10 +122,6 @@ class Console
   def current_card(number)
     @current_account.card[number.to_i - 1]
   end
-
-  # def current_account_cards
-  #  @current_account.card
-  # end
 
   def card_exists?(card_number)
     (1..@current_account.card.length).cover? card_number.to_i

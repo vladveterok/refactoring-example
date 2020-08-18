@@ -9,7 +9,7 @@ class Creator < Console
 
   def create_the_first_account
     puts I18n.t(:create_first_account)
-    gets.chomp == 'y' ? create : console
+    gets.chomp == COMMANDS[:yes] ? create : console
   end
 
   private
