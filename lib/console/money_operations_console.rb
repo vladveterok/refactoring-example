@@ -54,7 +54,7 @@ class Console
     end
 
     def find_recipient_card(card)
-      all_cards = account.accounts.map(&:card).flatten
+      all_cards = account.accounts.flat_map(&:card)
       return puts I18n.t(:no_such_card, card: card) unless all_cards.map(&:number).any? card
 
       all_cards.detect { |stored_card| stored_card.number == card }

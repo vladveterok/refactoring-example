@@ -2,7 +2,6 @@ RSpec.describe Account do
   let(:current_subject) { described_class.new }
 
   before do
-    # current_subject.instance_variable_set(Account::FILE_PATH, FileHelper::OVERRIDABLE_FILENAME)
     stub_const('Account::FILE_PATH', FileHelper::OVERRIDABLE_FILENAME)
   end
 
@@ -14,7 +13,6 @@ RSpec.describe Account do
       end
 
       it 'write to file Account instance' do
-        # current_subject.instance_variable_set(FILE_PATH, FileHelper::OVERRIDABLE_FILENAME)
         stub_const('Account::FILE_PATH', FileHelper::OVERRIDABLE_FILENAME)
         current_subject.create
         expect(File.exist?(FileHelper::OVERRIDABLE_FILENAME)).to be true
@@ -30,7 +28,6 @@ RSpec.describe Account do
     context 'when correct card choose' do
       before do
         allow(current_subject).to receive(:accounts) { [current_subject] }
-        # current_subject.instance_variable_set(FILE_PATH, FileHelper::OVERRIDABLE_FILENAME)
         current_subject.instance_variable_set(:@current_account, current_subject)
       end
 
@@ -60,7 +57,6 @@ RSpec.describe Account do
         before do
           current_subject.instance_variable_set(:@card, fake_cards)
           current_subject.instance_variable_set(:@current_account, current_subject)
-          # current_subject.instance_variable_set(FILE_PATH, FileHelper::OVERRIDABLE_FILENAME)
           allow(current_subject).to receive(:accounts) { [current_subject] }
         end
 
@@ -88,7 +84,6 @@ RSpec.describe Account do
     context 'when deleting' do
       it 'deletes account if user inputs is y' do
         expect(current_subject).to receive(:accounts) { accounts }
-        # current_subject.instance_variable_set(FILE_PATH, FileHelper::OVERRIDABLE_FILENAME)
         current_subject.instance_variable_set(:@current_account, instance_double('Account', login: correct_login))
         current_subject.destroy_account
 
