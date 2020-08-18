@@ -20,7 +20,7 @@ class ConsoleMenu < Console
       puts I18n.t(:menu, name: current_account.name)
 
       command = gets.chomp
-      break if command == 'exit'
+      break if command == COMMANDS[:exit]
 
       commands(command)
     end

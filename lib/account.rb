@@ -23,7 +23,6 @@ class Account
 
   def initialize
     @errors = []
-    # @file_path = 'accounts.yml'
     @card = []
     @current_account = nil
   end
