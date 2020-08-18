@@ -16,6 +16,10 @@ class CapitalistCard < BasicCard
     @balance ||= 100.00
   end
 
+  def type
+    @type ||= 'capitalist'
+  end
+
   def withdraw_tax(amount)
     tax(amount, TAX_PERCENT[:withdraw], TAX_FIXED[:withdraw])
   end

@@ -21,10 +21,6 @@ class BasicCard
     @number = generate_card_number
   end
 
-  def type
-    @type ||= self.class.to_s[0...-4].downcase
-  end
-
   def withdraw_money(amount)
     money_left = balance - amount - withdraw_tax(amount)
     raise BankErrors::NoMoneyError unless money_left.positive?

@@ -16,6 +16,10 @@ class UsualCard < BasicCard
     @balance ||= 50.00
   end
 
+  def type
+    @type ||= 'usual'
+  end
+
   def withdraw_tax(amount)
     tax(amount, TAX_PERCENT[:withdraw], TAX_FIXED[:withdraw])
   end

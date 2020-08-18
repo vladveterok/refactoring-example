@@ -16,6 +16,10 @@ class VirtualCard < BasicCard
     @balance ||= 150.00
   end
 
+  def type
+    @type ||= 'virtual'
+  end
+
   def withdraw_tax(amount)
     tax(amount, TAX_PERCENT[:withdraw], TAX_FIXED[:withdraw])
   end
