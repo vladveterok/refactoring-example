@@ -1,3 +1,5 @@
-require_relative 'account'
+require_relative 'bootstrap'
 
-Account.new.console
+# Account.new.console
+console = Console.new
+console.console

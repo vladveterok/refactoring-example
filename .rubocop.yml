@@ -1,5 +1,11 @@
 require: rubocop-rspec
 
+AllCops:
+  Exclude:
+      - 'db/**/*'
+      - '.git/**/*'
+      - 'test_dir/*'
+
 RSpec/MessageChain:
   Enabled: false
 
@@ -20,11 +26,11 @@ Metrics/BlockLength:
     - 'Gemfile'
     - 'spec/**/*.rb'
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
-Documentation:
+Style/Documentation:
   Enabled: false
 
-FrozenStringLiteralComment:
+Style/FrozenStringLiteralComment:
   Enabled: false
